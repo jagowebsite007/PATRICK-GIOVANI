@@ -60,12 +60,12 @@ const DEFAULT_WEDDING_ROWS = [
   ['bride_parents_father', 'Bapak Ir. Bambang Setiawan', 'Nama ayah mempelai wanita'],
   ['bride_parents_mother', 'Ibu Dra. Lestari Putri', 'Nama ibu mempelai wanita'],
   ['bride_instagram', '@nadialarasati', 'Username Instagram mempelai wanita'],
-  ['event_date_text', 'Sabtu, 20 Februari 2027', 'Teks hari & tanggal acara'],
+  ['event_date_text', 'Kamis, 26 November 2026', 'Teks hari & tanggal acara (format teks biasa)'],
   ['event_city', 'Jakarta Selatan', 'Kota acara di bagian Hero'],
-  ['event_date_short', '20 • 02 • 2027', 'Lencana tanggal singkat di bawah foto Hero'],
-  ['event_date_iso', '2027-02-20T08:00:00+07:00', 'Waktu mulai countdown & kalender (format ISO WIB)'],
-  ['event_end_iso', '2027-02-20T14:00:00+07:00', 'Waktu selesai acara untuk kalender (format ISO WIB)'],
-  ['akad_time', 'Pukul 08.00 – 10.00 WIB', 'Jam Akad Nikah'],
+  ['event_date_short', '26 • 11 • 2026', 'Lencana tanggal singkat di bawah foto Hero'],
+  ['event_date_iso', '2026-11-26T15:00:00+09:00', 'Waktu mulai countdown & kalender (format ISO WIT)'],
+  ['event_end_iso', '2026-11-26T21:00:00+09:00', 'Waktu selesai acara untuk kalender (format ISO WIT)'],
+  ['akad_time', 'Pukul 15.00 – 17.00 WIT', 'Jam Pemberkatan / Akad Nikah'],
   ['akad_venue', 'Nusantara Ballroom, The Dharmawangsa', 'Nama ruang / lokasi Akad Nikah'],
   ['resepsi_time', 'Pukul 11.00 – 14.00 WIB', 'Jam Resepsi Pernikahan'],
   ['resepsi_venue', 'Grand Garden & Ballroom, The Dharmawangsa', 'Nama ruang / lokasi Resepsi'],
@@ -74,7 +74,8 @@ const DEFAULT_WEDDING_ROWS = [
   ['maps_query', 'The Dharmawangsa Jakarta', 'Kata kunci pencarian Google Maps'],
   ['quote_text', 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.', 'Kutipan / ayat suci'],
   ['quote_source', 'QS. Ar-Rum : 21', 'Sumber kutipan / ayat'],
-  ['hashtag', '#ArdiansyahNadiaForever • 2027', 'Hashtag di bagian penutup'],
+  ['hashtag', '#PatrickGiovaniForever • 2026', 'Hashtag di bagian penutup'],
+  ['website_url', '', 'Opsional: Link website undangan Anda yang sudah online (untuk fitur Link Tamu)'],
   ['cover_bg_photo', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80', 'Link foto latar sampul (boleh link Google Drive)'],
   ['cover_arch_photo', 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80', 'Link foto bingkai lengkung sampul (boleh link Google Drive)'],
   ['hero_photo', 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80', 'Link foto utama Hero (boleh link Google Drive)'],
@@ -222,6 +223,27 @@ function normalizeImageUrl_(rawUrl) {
 }
 
 /**
+ * Mengubah objek Date dari Google Sheets menjadi teks tanggal Indonesia
+ * (contoh: "Kamis, 26 November 2026") agar tidak pernah muncul
+ * teks "GMT+0900 (Waktu Standar Korea)".
+ */
+function formatIndonesianDate_(dateObj) {
+  const tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone() || 'Asia/Jayapura';
+  const dayIndex = Number(Utilities.formatDate(dateObj, tz, 'u')) % 7; // 7 (Minggu) -> 0
+  const dayNum = Number(Utilities.formatDate(dateObj, tz, 'd'));
+  const monthIndex = Number(Utilities.formatDate(dateObj, tz, 'M')) - 1;
+  const yearNum = Utilities.formatDate(dateObj, tz, 'yyyy');
+
+  const idDays = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  const idMonths = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  return idDays[dayIndex] + ', ' + dayNum + ' ' + idMonths[monthIndex] + ' ' + yearNum;
+}
+
+/**
  * Helper untuk mengembalikan respons JSON standar yang aman dibaca browser.
  */
 function createJsonResponse_(payload) {
@@ -238,14 +260,29 @@ function createJsonResponse_(payload) {
 function doGet(e) {
   try {
     const { weddingSheet, gallerySheet, rsvpSheet } = setupDatabase();
+    const tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone() || 'Asia/Jayapura';
 
-    // 1. Ambil seluruh data profil pengantin (key-value)
-    const weddingRows = weddingSheet.getDataRange().getValues();
+    // 1. Ambil seluruh data profil pengantin (pakai DisplayValues agar sel tanggal tidak berubah jadi GMT+0900)
+    const weddingRange = weddingSheet.getDataRange();
+    const weddingRawRows = weddingRange.getValues();
+    const weddingDisplayRows = weddingRange.getDisplayValues();
     const wedding = {};
-    for (let i = 1; i < weddingRows.length; i++) {
-      const key = String(weddingRows[i][0] || '').trim();
-      let val = String(weddingRows[i][1] || '').trim();
+    for (let i = 1; i < weddingRawRows.length; i++) {
+      const key = String(weddingDisplayRows[i][0] || '').trim();
+      const rawVal = weddingRawRows[i][1];
+      let val = String(weddingDisplayRows[i][1] || '').trim();
       if (!key) continue;
+
+      // Jika Google Sheets otomatis mengubah sel menjadi objek Date, format ulang dengan rapi
+      if (rawVal instanceof Date) {
+        if (key === 'event_date_text') {
+          val = formatIndonesianDate_(rawVal);
+        } else if (key === 'event_date_short') {
+          val = Utilities.formatDate(rawVal, tz, 'dd • MM • yyyy');
+        } else if (key === 'event_date_iso' || key === 'event_end_iso') {
+          val = Utilities.formatDate(rawVal, tz, "yyyy-MM-dd'T'HH:mm:ssXXX");
+        }
+      }
 
       if (PHOTO_KEYS.indexOf(key) !== -1 && val) {
         val = normalizeImageUrl_(val);
@@ -335,16 +372,16 @@ function doPost(e) {
     }
 
     const id = 'rsvp_' + Date.now();
-    const timestampWIB = Utilities.formatDate(new Date(), 'Asia/Jakarta', 'dd MMM yyyy, HH:mm') + ' WIB';
+    const timestampWIT = Utilities.formatDate(new Date(), 'Asia/Jayapura', 'dd MMM yyyy, HH:mm') + ' WIT';
 
     // Simpan baris baru ke tab RSVP_Ucapan
-    rsvpSheet.appendRow([id, timestampWIB, name, attendance, guests, wish]);
+    rsvpSheet.appendRow([id, timestampWIT, name, attendance, guests, wish]);
 
     return createJsonResponse_({
       status: 'success',
       data: {
         id: id,
-        createdAt: timestampWIB,
+        createdAt: timestampWIT,
         name: name,
         attendance: attendance,
         guests: guests,
