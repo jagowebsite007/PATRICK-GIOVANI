@@ -1,55 +1,164 @@
 /**
  * ============================================================================
- * GOOGLE APPS SCRIPT - DATABASE UNDANGAN PERNIKAHAN DIGITAL (OPSI A)
+ * GOOGLE APPS SCRIPT - DATABASE UNDANGAN PERNIKAHAN DIGITAL (FULL SYNC)
  * ============================================================================
+ * Fitur Otomatis:
+ * 1. Tab `Data_Pengantin` : Edit nama, orang tua, jadwal, lokasi, rekening,
+ *                           QRIS, dan foto utama langsung dari Google Sheets.
+ * 2. Tab `Galeri_Foto`    : Tambah / ubah / sembunyikan foto prewedding.
+ * 3. Tab `Daftar_Tamu`    : Catatan daftar tamu undangan & nomor WhatsApp.
+ * 4. Tab `RSVP_Ucapan`    : Database otomatis konfirmasi kehadiran & ucapan.
+ * 5. Konversi Link Drive  : Link share Google Drive otomatis diubah menjadi
+ *                           tautan gambar siap tampil di website.
+ *
  * Cara Pemasangan:
- * 1. Buka Google Sheets baru di https://sheets.new
- * 2. Klik menu: Ekstensi (Extensions) -> Apps Script
- * 3. Hapus seluruh kode bawaan, lalu tempel (paste) seluruh kode ini.
- * 4. Klik ikon Simpan (Ctrl+S), lalu jalankan fungsi "setupDatabase" sekali
- *    dan berikan izin akses (Review Permissions -> Allow).
- * 5. Klik tombol "Terapkan" (Deploy) -> "Deployment baru" (New deployment).
- * 6. Pilih jenis: "Aplikasi web" (Web app):
+ * 1. Buka Google Sheets baru di https://sheets.new (atau buka Sheet lama Anda).
+ * 2. Klik menu: Ekstensi (Extensions) -> Apps Script.
+ * 3. Hapus seluruh kode lama, lalu tempel (paste) seluruh kode ini.
+ * 4. Klik Simpan (Ctrl+S), pilih fungsi "setupDatabase" di bagian atas, lalu
+ *    klik "Jalankan" (Run) dan izinkan akses (Review Permissions -> Allow).
+ * 5. Klik "Terapkan" (Deploy) -> "Deployment baru" (New deployment):
+ *    - Jenis: Aplikasi web (Web app)
  *    - Jalankan sebagai (Execute as): Saya (Me)
  *    - Yang memiliki akses (Who has access): Siapa saja (Anyone)
- * 7. Klik "Terapkan", lalu salin "URL Aplikasi Web" yang muncul.
- * 8. Tempel URL tersebut ke variabel `googleScriptUrl` di `undangan_pernikahan.html`.
+ *    (Jika sebelumnya sudah pernah deploy, gunakan "Kelola deployment" ->
+ *    ikon pensil -> Versi: "Versi baru" -> Terapkan, agar URL tetap sama.)
+ * 6. Salin "URL Aplikasi Web", lalu tempel ke variabel `googleScriptUrl`
+ *    di dalam file `undangan_pernikahan.html`.
  * ============================================================================
  */
 
 const SHEET_NAMES = {
   WEDDING: 'Data_Pengantin',
+  GALLERY: 'Galeri_Foto',
   GUESTS: 'Daftar_Tamu',
   RSVP: 'RSVP_Ucapan'
 };
 
+// Daftar kunci foto di tab Data_Pengantin yang perlu dikonversi jika memakai Google Drive
+const PHOTO_KEYS = [
+  'cover_bg_photo',
+  'cover_arch_photo',
+  'hero_photo',
+  'groom_photo',
+  'bride_photo',
+  'video_thumb_photo',
+  'qris_image_url'
+];
+
+// Nilai default lengkap untuk tab Data_Pengantin
+const DEFAULT_WEDDING_ROWS = [
+  ['groom_short', 'Ardiansyah', 'Nama panggilan mempelai pria'],
+  ['bride_short', 'Nadia', 'Nama panggilan mempelai wanita'],
+  ['groom_name', 'Ardiansyah Pratama, S.T.', 'Nama lengkap & gelar mempelai pria'],
+  ['bride_name', 'Nadia Larasati, S.Ds.', 'Nama lengkap & gelar mempelai wanita'],
+  ['groom_child_order', 'Putra pertama dari', 'Keterangan urutan anak mempelai pria'],
+  ['groom_parents_father', 'Bapak H. Hendra Wijaya', 'Nama ayah mempelai pria'],
+  ['groom_parents_mother', 'Ibu Hj. Ratna Kusuma', 'Nama ibu mempelai pria'],
+  ['groom_instagram', '@ardiansyah.p', 'Username Instagram mempelai pria'],
+  ['bride_child_order', 'Putri kedua dari', 'Keterangan urutan anak mempelai wanita'],
+  ['bride_parents_father', 'Bapak Ir. Bambang Setiawan', 'Nama ayah mempelai wanita'],
+  ['bride_parents_mother', 'Ibu Dra. Lestari Putri', 'Nama ibu mempelai wanita'],
+  ['bride_instagram', '@nadialarasati', 'Username Instagram mempelai wanita'],
+  ['event_date_text', 'Sabtu, 20 Februari 2027', 'Teks hari & tanggal acara'],
+  ['event_city', 'Jakarta Selatan', 'Kota acara di bagian Hero'],
+  ['event_date_short', '20 • 02 • 2027', 'Lencana tanggal singkat di bawah foto Hero'],
+  ['event_date_iso', '2027-02-20T08:00:00+07:00', 'Waktu mulai countdown & kalender (format ISO WIB)'],
+  ['event_end_iso', '2027-02-20T14:00:00+07:00', 'Waktu selesai acara untuk kalender (format ISO WIB)'],
+  ['akad_time', 'Pukul 08.00 – 10.00 WIB', 'Jam Akad Nikah'],
+  ['akad_venue', 'Nusantara Ballroom, The Dharmawangsa', 'Nama ruang / lokasi Akad Nikah'],
+  ['resepsi_time', 'Pukul 11.00 – 14.00 WIB', 'Jam Resepsi Pernikahan'],
+  ['resepsi_venue', 'Grand Garden & Ballroom, The Dharmawangsa', 'Nama ruang / lokasi Resepsi'],
+  ['venue_name', 'The Dharmawangsa Jakarta', 'Nama gedung utama'],
+  ['venue_address', 'Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160', 'Alamat lengkap lokasi acara'],
+  ['maps_query', 'The Dharmawangsa Jakarta', 'Kata kunci pencarian Google Maps'],
+  ['quote_text', 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.', 'Kutipan / ayat suci'],
+  ['quote_source', 'QS. Ar-Rum : 21', 'Sumber kutipan / ayat'],
+  ['hashtag', '#ArdiansyahNadiaForever • 2027', 'Hashtag di bagian penutup'],
+  ['cover_bg_photo', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80', 'Link foto latar sampul (boleh link Google Drive)'],
+  ['cover_arch_photo', 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80', 'Link foto bingkai lengkung sampul (boleh link Google Drive)'],
+  ['hero_photo', 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80', 'Link foto utama Hero (boleh link Google Drive)'],
+  ['groom_photo', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80', 'Link foto profil mempelai pria (boleh link Google Drive)'],
+  ['bride_photo', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80', 'Link foto profil mempelai wanita (boleh link Google Drive)'],
+  ['video_thumb_photo', 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80', 'Link foto thumbnail video highlight (boleh link Google Drive)'],
+  ['bank1_name', 'BCA', 'Nama singkat Bank 1'],
+  ['bank1_label', 'Bank Central Asia', 'Nama lengkap Bank 1'],
+  ['bank1_number', '8290 1456 78', 'Nomor rekening Bank 1'],
+  ['bank1_holder', 'Ardiansyah Pratama', 'Nama pemilik rekening Bank 1'],
+  ['bank2_name', 'Mandiri', 'Nama singkat Bank 2'],
+  ['bank2_label', 'Bank Mandiri', 'Nama lengkap Bank 2'],
+  ['bank2_number', '1240 0098 7654 3', 'Nomor rekening Bank 2'],
+  ['bank2_holder', 'Nadia Larasati', 'Nama pemilik rekening Bank 2'],
+  ['qris_image_url', '', 'Opsional: Link gambar QRIS asli (kosongkan jika pakai contoh QRIS)'],
+  ['gift_recipient', 'Nadia Larasati & Ardiansyah Pratama', 'Nama penerima kado fisik'],
+  ['gift_address', 'Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12730', 'Alamat pengiriman kado fisik'],
+  ['gift_phone', '0812-3456-7890', 'Nomor telepon penerima kado']
+];
+
+// Contoh foto default untuk tab Galeri_Foto
+const DEFAULT_GALLERY_ROWS = [
+  [1, 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80', 'Langkah pertama menuju bab kehidupan yang baru.', 'Tampil'],
+  [2, 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=900&q=80', 'Dalam tenang, kami menemukan rumah satu sama lain.', 'Tampil'],
+  [3, 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80', 'Janji suci yang dijaga dengan doa dan ketulusan.', 'Tampil'],
+  [4, 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80', 'Menyambut hari esok bersama selamanya.', 'Tampil'],
+  [5, 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80', 'Cinta tumbuh paling indah dalam kesederhanaan.', 'Tampil'],
+  [6, 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&q=80', 'Ardiansyah & Nadia — 20 Februari 2027.', 'Tampil']
+];
+
 /**
- * Inisialisasi otomatis 3 tab database di Google Sheets jika belum ada.
- * Anda bisa menjalankan fungsi ini secara manual dari editor Apps Script
- * agar struktur tabel langsung terbentuk dengan rapi.
+ * Inisialisasi otomatis 4 tab database di Google Sheets.
+ * Aman dijalankan ulang: tidak menimpa data yang sudah Anda edit,
+ * hanya menambahkan tab atau baris kunci baru yang belum ada.
  */
 function setupDatabase() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // 1. Tab Data_Pengantin (Database Profil & Pengaturan Acara)
+  // 1. Tab Data_Pengantin
   let weddingSheet = ss.getSheetByName(SHEET_NAMES.WEDDING);
   if (!weddingSheet) {
     weddingSheet = ss.insertSheet(SHEET_NAMES.WEDDING);
-    const weddingHeaders = [['Kunci', 'Nilai', 'Keterangan']];
-    const weddingDefaults = [
-      ['groom_name', 'Ardiansyah Pratama', 'Nama mempelai pria'],
-      ['bride_name', 'Nadia Larasati', 'Nama mempelai wanita'],
-      ['event_date_iso', '2027-02-20T08:00:00+07:00', 'Tanggal & jam mulai acara (ISO)'],
-      ['venue_name', 'The Dharmawangsa Jakarta', 'Nama gedung / lokasi'],
-      ['venue_address', 'Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan', 'Alamat lengkap lokasi']
-    ];
-
-    weddingSheet.getRange(1, 1, 1, 3).setValues(weddingHeaders);
-    weddingSheet.getRange(2, 1, weddingDefaults.length, 3).setValues(weddingDefaults);
+    weddingSheet.getRange(1, 1, 1, 3).setValues([['Kunci', 'Nilai', 'Keterangan']]);
+    weddingSheet.getRange(2, 1, DEFAULT_WEDDING_ROWS.length, 3).setValues(DEFAULT_WEDDING_ROWS);
     styleHeaderRow_(weddingSheet, 3);
+    weddingSheet.setColumnWidth(1, 190);
+    weddingSheet.setColumnWidth(2, 380);
+    weddingSheet.setColumnWidth(3, 320);
+  } else {
+    // Jika tab sudah ada dari versi sebelumnya, tambahkan kunci baru yang belum ada tanpa menghapus editan user
+    const existingRows = weddingSheet.getDataRange().getValues();
+    const existingKeys = new Set();
+    for (let i = 1; i < existingRows.length; i++) {
+      const key = String(existingRows[i][0] || '').trim();
+      if (key) existingKeys.add(key);
+    }
+    const missingRows = DEFAULT_WEDDING_ROWS.filter(function(row) {
+      return !existingKeys.has(row[0]);
+    });
+    if (missingRows.length > 0) {
+      weddingSheet
+        .getRange(weddingSheet.getLastRow() + 1, 1, missingRows.length, 3)
+        .setValues(missingRows);
+    }
   }
 
-  // 2. Tab Daftar_Tamu (Database Daftar Tamu Undangan untuk Kirim Link)
+  // 2. Tab Galeri_Foto
+  let gallerySheet = ss.getSheetByName(SHEET_NAMES.GALLERY);
+  if (!gallerySheet) {
+    gallerySheet = ss.insertSheet(SHEET_NAMES.GALLERY);
+    gallerySheet
+      .getRange(1, 1, 1, 4)
+      .setValues([['No', 'Link Foto (URL / Google Drive)', 'Keterangan (Caption)', 'Status']]);
+    gallerySheet
+      .getRange(2, 1, DEFAULT_GALLERY_ROWS.length, 4)
+      .setValues(DEFAULT_GALLERY_ROWS);
+    styleHeaderRow_(gallerySheet, 4);
+    gallerySheet.setColumnWidth(1, 50);
+    gallerySheet.setColumnWidth(2, 420);
+    gallerySheet.setColumnWidth(3, 300);
+    gallerySheet.setColumnWidth(4, 110);
+  }
+
+  // 3. Tab Daftar_Tamu
   let guestSheet = ss.getSheetByName(SHEET_NAMES.GUESTS);
   if (!guestSheet) {
     guestSheet = ss.insertSheet(SHEET_NAMES.GUESTS);
@@ -58,13 +167,12 @@ function setupDatabase() {
       [1, 'Budi Santoso & Pasangan', 'VIP / Sahabat', '6281234567890', 2, 'Belum Dikirim'],
       [2, 'Keluarga Besar Bapak Arifin', 'Keluarga', '6281298765432', 4, 'Sudah Dikirim']
     ];
-
     guestSheet.getRange(1, 1, 1, 6).setValues(guestHeaders);
     guestSheet.getRange(2, 1, guestExamples.length, 6).setValues(guestExamples);
     styleHeaderRow_(guestSheet, 6);
   }
 
-  // 3. Tab RSVP_Ucapan (Database Otomatis Konfirmasi Kehadiran & Buku Tamu)
+  // 4. Tab RSVP_Ucapan
   let rsvpSheet = ss.getSheetByName(SHEET_NAMES.RSVP);
   if (!rsvpSheet) {
     rsvpSheet = ss.insertSheet(SHEET_NAMES.RSVP);
@@ -73,7 +181,7 @@ function setupDatabase() {
     styleHeaderRow_(rsvpSheet, 6);
   }
 
-  return { ss, weddingSheet, guestSheet, rsvpSheet };
+  return { ss, weddingSheet, gallerySheet, guestSheet, rsvpSheet };
 }
 
 /**
@@ -89,6 +197,31 @@ function styleHeaderRow_(sheet, colCount) {
 }
 
 /**
+ * Mengonversi tautan berbagi Google Drive biasa menjadi URL gambar langsung
+ * agar bisa ditampilkan oleh tag <img> di website.
+ * Contoh input: https://drive.google.com/file/d/1AbCdEfGhIjKlMnOp/view?usp=sharing
+ * Output      : https://drive.google.com/thumbnail?id=1AbCdEfGhIjKlMnOp&sz=w1600
+ */
+function normalizeImageUrl_(rawUrl) {
+  const url = String(rawUrl || '').trim();
+  if (!url) return '';
+
+  // Deteksi pola /file/d/FILE_ID/
+  let match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+  if (match && match[1]) {
+    return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1600';
+  }
+
+  // Deteksi pola ?id=FILE_ID atau &id=FILE_ID (open / uc)
+  match = url.match(/drive\.google\.com\/(?:open|uc)\?[^#]*\bid=([a-zA-Z0-9_-]+)/i);
+  if (match && match[1]) {
+    return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1600';
+  }
+
+  return url;
+}
+
+/**
  * Helper untuk mengembalikan respons JSON standar yang aman dibaca browser.
  */
 function createJsonResponse_(payload) {
@@ -99,27 +232,50 @@ function createJsonResponse_(payload) {
 
 /**
  * ============================================================================
- * ENDPOINT GET: Mengambil Data Pengantin & Daftar RSVP/Ucapan dari Sheets
+ * ENDPOINT GET: Mengambil Data Pengantin, Galeri Foto & Daftar RSVP/Ucapan
  * ============================================================================
  */
 function doGet(e) {
   try {
-    const { weddingSheet, rsvpSheet } = setupDatabase();
+    const { weddingSheet, gallerySheet, rsvpSheet } = setupDatabase();
 
-    // Ambil data profil pengantin (key-value)
+    // 1. Ambil seluruh data profil pengantin (key-value)
     const weddingRows = weddingSheet.getDataRange().getValues();
     const wedding = {};
     for (let i = 1; i < weddingRows.length; i++) {
       const key = String(weddingRows[i][0] || '').trim();
-      const val = String(weddingRows[i][1] || '').trim();
-      if (key) wedding[key] = val;
+      let val = String(weddingRows[i][1] || '').trim();
+      if (!key) continue;
+
+      if (PHOTO_KEYS.indexOf(key) !== -1 && val) {
+        val = normalizeImageUrl_(val);
+      }
+      wedding[key] = val;
     }
 
-    // Ambil seluruh data RSVP & Ucapan
+    // 2. Ambil seluruh foto dari tab Galeri_Foto yang berstatus Tampil
+    const galleryRows = gallerySheet.getDataRange().getValues();
+    const gallery = [];
+    for (let i = 1; i < galleryRows.length; i++) {
+      const row = galleryRows[i];
+      const rawSrc = String(row[1] || '').trim();
+      const caption = String(row[2] || '').trim();
+      const status = String(row[3] || 'Tampil').trim().toLowerCase();
+
+      if (!rawSrc) continue;
+      if (status === 'sembunyi' || status === 'hide' || status === 'off' || status === 'tidak') {
+        continue;
+      }
+
+      gallery.push({
+        src: normalizeImageUrl_(rawSrc),
+        caption: caption || 'Momen Bahagia'
+      });
+    }
+
+    // 3. Ambil seluruh data RSVP & Ucapan (terbaru di paling atas)
     const rsvpRows = rsvpSheet.getDataRange().getValues();
     const wishes = [];
-
-    // Mulai dari indeks 1 (lewati baris header), urutkan terbaru di atas
     for (let i = rsvpRows.length - 1; i >= 1; i--) {
       const row = rsvpRows[i];
       const name = String(row[2] || '').trim();
@@ -127,7 +283,7 @@ function doGet(e) {
       if (!name && !wish) continue;
 
       wishes.push({
-        id: String(row[0] || `row_${i}`),
+        id: String(row[0] || ('row_' + i)),
         createdAt: String(row[1] || ''),
         name: name,
         attendance: String(row[3] || 'Hadir'),
@@ -139,6 +295,7 @@ function doGet(e) {
     return createJsonResponse_({
       status: 'success',
       wedding: wedding,
+      gallery: gallery,
       wishes: wishes
     });
   } catch (err) {
@@ -157,7 +314,7 @@ function doGet(e) {
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
-    // Kunci antrean penulisan hingga 10 detik agar data tidak saling menimpa
+    // Kunci antrean penulisan hingga 10 detik agar data tidak bentrok
     lock.waitLock(10000);
 
     const { rsvpSheet } = setupDatabase();
@@ -167,7 +324,7 @@ function doPost(e) {
     const name = String(body.name || '').trim().slice(0, 80);
     const wish = String(body.wish || '').trim().slice(0, 500);
     const allowedStatus = ['Hadir', 'Ragu-ragu', 'Tidak Hadir'];
-    const attendance = allowedStatus.includes(body.attendance) ? body.attendance : 'Hadir';
+    const attendance = allowedStatus.indexOf(body.attendance) !== -1 ? body.attendance : 'Hadir';
     const guests = attendance === 'Tidak Hadir' ? 0 : Math.max(1, Math.min(20, Number(body.guests) || 1));
 
     if (!name || !wish) {
