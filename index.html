@@ -167,7 +167,7 @@
                     </h2>
                     <p class="mt-3 text-sm text-taupe tracking-wide">
                         <span data-bind="event_date_text">Kamis, 26 November 2026</span> &bull;
-                        <span data-bind="event_city">Jakarta Selatan</span>
+                        <span data-bind="event_city">Tobelo Selatan</span>
                     </p>
                 </div>
 
@@ -448,7 +448,7 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- 7. AMPLOP DIGITAL & WEDDING GIFT (1 REKENING BANK)                -->
+        <!-- 7. AMPLOP DIGITAL & WEDDING GIFT (TRANSFER BANK)                  -->
         <!-- ================================================================= -->
         <section id="gift" class="py-20 px-5 bg-silk/70 border-y border-champagne/60">
             <div class="max-w-3xl mx-auto">
@@ -456,46 +456,21 @@
                     <p class="text-[11px] uppercase tracking-[0.3em] text-gold font-medium">Wedding Gift</p>
                     <h3 class="mt-2 font-serif text-3xl sm:text-4xl text-espresso">Tanda Kasih</h3>
                     <p class="mt-3 text-sm text-taupe leading-relaxed">
-                        Doa restu Bapak/Ibu/Saudara/i merupakan karunia yang sangat berarti bagi kami. Namun apabila ingin memberikan tanda kasih, dapat disalurkan secara praktis melalui fitur di bawah ini.
+                        Doa restu Bapak/Ibu/Saudara/i merupakan karunia yang sangat berarti bagi kami. Namun apabila ingin memberikan tanda kasih, dapat disalurkan melalui rekening berikut.
                     </p>
                 </div>
 
-                <!-- Tab Pilihan Hadiah (Transfer Bank / QRIS / Kado Fisik) -->
-                <div data-reveal data-reveal-delay="100" class="flex items-center justify-center gap-2 mb-8 flex-wrap opacity-0 translate-y-6 transition-all duration-700 ease-luxury">
-                    <button
-                        type="button"
-                        data-gift-tab="bank"
-                        class="gift-tab-btn px-5 py-2.5 rounded-full text-xs uppercase tracking-[0.16em] font-medium bg-espresso text-ivory transition-all duration-300 cursor-pointer"
-                    >
-                        Transfer Bank
-                    </button>
-                    <button
-                        type="button"
-                        data-gift-tab="qris"
-                        class="gift-tab-btn px-5 py-2.5 rounded-full text-xs uppercase tracking-[0.16em] font-medium bg-white border border-champagne text-taupe hover:text-espresso transition-all duration-300 cursor-pointer"
-                    >
-                        QRIS Digital
-                    </button>
-                    <button
-                        type="button"
-                        data-gift-tab="address"
-                        class="gift-tab-btn px-5 py-2.5 rounded-full text-xs uppercase tracking-[0.16em] font-medium bg-white border border-champagne text-taupe hover:text-espresso transition-all duration-300 cursor-pointer"
-                    >
-                        Kirim Kado
-                    </button>
-                </div>
-
-                <!-- Konten Tab 1: Transfer Bank (1 Rekening Utama) -->
-                <div id="gift-panel-bank" data-reveal data-reveal-delay="180" class="gift-panel max-w-md mx-auto opacity-0 translate-y-6 transition-all duration-700 ease-luxury">
+                <!-- Kartu Transfer Bank (1 Rekening Utama) -->
+                <div id="gift-panel-bank" data-reveal data-reveal-delay="140" class="max-w-md mx-auto opacity-0 translate-y-6 transition-all duration-700 ease-luxury">
                     <div class="bg-gradient-to-br from-espresso to-[#3D3731] text-ivory rounded-3xl p-6 sm:p-7 shadow-md flex flex-col justify-between min-h-[210px] border border-gold/30">
                         <div class="flex items-center justify-between">
-                            <span data-bind="bank1_name" class="font-serif text-2xl tracking-wider text-champagne">BCA</span>
-                            <span data-bind="bank1_label" class="text-[10px] uppercase tracking-[0.2em] text-champagne/70">Bank Central Asia</span>
+                            <span data-bind="bank1_name" class="font-serif text-2xl tracking-wider text-champagne">BRI</span>
+                            <span data-bind="bank1_label" class="text-[10px] uppercase tracking-[0.2em] text-champagne/70">Bank Rakyat Indonesia</span>
                         </div>
                         <div class="my-5">
                             <p class="text-[11px] text-champagne/70">Nomor Rekening</p>
-                            <p data-bind="bank1_number" class="mt-1 font-mono text-xl sm:text-2xl tracking-widest text-ivory">8290 1456 78</p>
-                            <p class="mt-1.5 text-xs text-champagne">a.n. <span data-bind="bank1_holder">Patrick Naftali Herena</span></p>
+                            <p data-bind="bank1_number" class="mt-1 font-mono text-xl sm:text-2xl tracking-widest text-ivory">111401008463537</p>
+                            <p class="mt-1.5 text-xs text-champagne">a.n. <span data-bind="bank1_holder">Giovani Melia Buael</span></p>
                         </div>
                         <button
                             id="btn-copy-bank1"
@@ -506,79 +481,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/>
                             </svg>
                             <span>Salin Rekening</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Konten Tab 2: QRIS Digital -->
-                <div id="gift-panel-qris" class="gift-panel hidden">
-                    <div class="max-w-sm mx-auto bg-white border border-champagne rounded-3xl p-7 text-center shadow-sm">
-                        <p class="text-[11px] uppercase tracking-[0.25em] text-gold font-medium">Scan QRIS</p>
-                        <p class="mt-1 font-serif text-xl text-espresso">
-                            <span data-bind="groom_short">Patrick</span> &amp; <span data-bind="bride_short">Giovani</span>
-                        </p>
-
-                        <!-- Gambar QRIS Asli dari Spreadsheet (tampil otomatis jika qris_image_url diisi) -->
-                        <div class="my-5 p-4 bg-ivory border border-champagne/80 rounded-2xl inline-block">
-                            <img
-                                id="img-qris-custom"
-                                src=""
-                                alt="QRIS Pembayaran"
-                                class="hidden w-52 h-52 object-contain rounded-xl"
-                            >
-                            <!-- Ilustrasi QRIS SVG Bawaan (jika qris_image_url masih kosong) -->
-                            <svg id="svg-qris-placeholder" class="w-44 h-44 text-espresso" viewBox="0 0 100 100" fill="currentColor" aria-label="Kode QRIS Contoh">
-                                <rect x="6" y="6" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="5"/>
-                                <rect x="13" y="13" width="12" height="12" rx="1"/>
-                                <rect x="68" y="6" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="5"/>
-                                <rect x="75" y="13" width="12" height="12" rx="1"/>
-                                <rect x="6" y="68" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="5"/>
-                                <rect x="13" y="75" width="12" height="12" rx="1"/>
-                                <rect x="40" y="8" width="6" height="6"/>
-                                <rect x="52" y="8" width="6" height="12"/>
-                                <rect x="40" y="20" width="12" height="6"/>
-                                <rect x="8" y="40" width="12" height="6"/>
-                                <rect x="26" y="40" width="6" height="18"/>
-                                <rect x="40" y="40" width="20" height="20" rx="3" fill="none" stroke="#A68A5B" stroke-width="4"/>
-                                <rect x="47" y="47" width="6" height="6" fill="#A68A5B"/>
-                                <rect x="68" y="40" width="12" height="6"/>
-                                <rect x="86" y="40" width="8" height="12"/>
-                                <rect x="8" y="54" width="12" height="6"/>
-                                <rect x="68" y="54" width="6" height="12"/>
-                                <rect x="80" y="58" width="14" height="6"/>
-                                <rect x="40" y="68" width="6" height="24"/>
-                                <rect x="52" y="72" width="12" height="6"/>
-                                <rect x="52" y="84" width="18" height="8"/>
-                                <rect x="74" y="70" width="8" height="12"/>
-                                <rect x="86" y="76" width="8" height="16"/>
-                            </svg>
-                        </div>
-                        <p class="text-xs text-taupe leading-relaxed">
-                            Mendukung seluruh aplikasi m-Banking, GoPay, OVO, Dana, dan ShopeePay.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Konten Tab 3: Alamat Pengiriman Kado Fisik -->
-                <div id="gift-panel-address" class="gift-panel hidden">
-                    <div class="max-w-lg mx-auto bg-white border border-champagne rounded-3xl p-7 text-center shadow-sm">
-                        <div class="w-12 h-12 mx-auto rounded-full bg-ivory border border-champagne flex items-center justify-center text-gold">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
-                            </svg>
-                        </div>
-                        <h4 class="mt-4 font-serif text-2xl text-espresso">Alamat Penerima Kado</h4>
-                        <p data-bind="gift_recipient" class="mt-2 text-sm font-medium text-espresso">Giovani Larasati &amp; Patrick Naftali Herena</p>
-                        <p class="mt-1.5 text-xs text-taupe leading-relaxed">
-                            <span data-bind="gift_address">Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12730</span><br>
-                            Telp: <span data-bind="gift_phone">0812-3456-7890</span>
-                        </p>
-                        <button
-                            id="btn-copy-gift-address"
-                            type="button"
-                            class="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-espresso text-ivory text-xs uppercase tracking-[0.18em] hover:bg-taupe transition-colors cursor-pointer"
-                        >
-                            <span>Salin Alamat Lengkap</span>
                         </button>
                     </div>
                 </div>
@@ -691,7 +593,7 @@
                         <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-champagne/60">
                             <div>
                                 <h4 class="font-serif text-2xl text-espresso">Ucapan &amp; Doa</h4>
-                                <p id="wishes-count-label" class="text-xs text-taupe mt-0.5">0 ucapan diterima</p>
+                                <p id="wishes-count-label" class="text-xs text-taupe mt-0.5">0 ucapan &amp; konfirmasi diterima</p>
                             </div>
                             <!-- Filter & Tombol Muat Ulang -->
                             <div class="flex items-center gap-1.5">
@@ -960,22 +862,22 @@
             bride_short: 'Giovani',
             groom_name: 'Patrick Naftali Herena, S.T.',
             bride_name: 'Giovani Melia Buael, S.K.M',
-            groom_child_order: 'Putra pertama dari',
-            groom_parents_father: 'Bapak Contoh',
-            groom_parents_mother: 'Ibu Contoh',
-            groom_instagram: '@Patrick.p',
-            bride_child_order: 'Putri kedua dari',
-            bride_parents_father: 'Bapak Contoh',
-            bride_parents_mother: 'Ibu Contoh',
-            bride_instagram: '@Giovanilarasati',
+            groom_child_order: 'Putra Kedua dari',
+            groom_parents_father: 'Bapak Nixon Herana',
+            groom_parents_mother: 'Ibu Adriyani Matulende',
+            groom_instagram: '',
+            bride_child_order: 'Putri ketiga dari',
+            bride_parents_father: 'Bapak Bernat Buael',
+            bride_parents_mother: 'Ibu Almarhum. Nincevoni Totomo',
+            bride_instagram: '',
             event_date_text: 'Kamis, 26 November 2026',
             event_city: 'Tobelo Selatan',
             event_date_short: '26 • 11 • 2026',
             event_date_iso: '2026-11-26T15:00:00+09:00',
             event_end_iso: '2026-11-26T21:00:00+09:00',
-            pemberkatan_time: 'Pukul 15.00 WIT',
-            pemberkatan_venue: 'Gd Gereja, Efata Kupa-Kupa',
-            resepsi_time: 'Pukul 17.00 WIT',
+            akad_time: 'Pukul 15.00 – 17.00 WIT',
+            akad_venue: 'Gd Gereja, Efata Kupa-Kupa',
+            resepsi_time: 'Pukul 17.00 – 21.00 WIT',
             resepsi_venue: 'Rumah Mempelai Pria & Ds. Kupa-Kupa',
             venue_name: 'The Dharmawangsa Jakarta',
             venue_address: 'Jl. Desa Kupa-Kupa.',
@@ -993,11 +895,7 @@
             bank1_name: 'BRI',
             bank1_label: 'Bank Rakyat Indonesia',
             bank1_number: '111401008463537',
-            bank1_holder: 'Giovani Melia Buael',
-            qris_image_url: '',
-            gift_recipient: 'Giovani Larasati & Patrick Naftali Herena',
-            gift_address: 'Jl. Desa Kupa-Kupa',
-            gift_phone: '082349038228'
+            bank1_holder: 'Giovani Melia Buael'
         };
 
         // Galeri Foto Bawaan (Maksimal 4 Foto)
@@ -1018,47 +916,14 @@
                 caption: 'Janji suci yang dijaga dengan doa dan ketulusan.'
             },
             {
-                src: 'https://drive.google.com/file/d/1u0oyM8FsUS1RrJvOFnNedo5Dz0oET_I_/view?usp=drive_link',
+                src: 'https://drive.google.com/file/d/1E7osm_JuQxIdbl13oqqMhG7Z3TigbJnC/view?usp=drive_link',
                 fallback: 'https://placehold.co/800x1000/EAE3D5/6E655B?text=Moment+04',
                 caption: 'Menyambut hari esok bersama selamanya.'
             }
         ];
 
-        // Contoh Ucapan Awal pada Mode Demo
-        const DEFAULT_WISHES = [
-            {
-                id: 'w1',
-                name: 'Dimas & Clarissa',
-                attendance: 'Hadir',
-                guests: 2,
-                wish: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang harmonis dan selalu dilimpahi kasih serta berkat.',
-                createdAt: '2 jam lalu'
-            },
-            {
-                id: 'w2',
-                name: 'dr. Farah Aulia',
-                attendance: 'Hadir',
-                guests: 1,
-                wish: 'Happy wedding! Undangan digitalnya elegan banget. Sampai bertemu di hari bahagia!',
-                createdAt: '5 jam lalu'
-            },
-            {
-                id: 'w3',
-                name: 'Reza Mahendra',
-                attendance: 'Ragu-ragu',
-                guests: 2,
-                wish: 'Selamat untuk kalian berdua! Semoga lancar sampai hari H. Masih menyesuaikan jadwal dinas luar kota, semoga bisa menyempatkan hadir.',
-                createdAt: '1 hari lalu'
-            },
-            {
-                id: 'w4',
-                name: 'Keluarga Besar Bapak Arifin',
-                attendance: 'Tidak Hadir',
-                guests: 0,
-                wish: 'Mohon maaf belum dapat hadir secara langsung karena sedang berada di luar kota. Doa terbaik selalu menyertai pernikahan kalian.',
-                createdAt: '2 hari lalu'
-            }
-        ];
+        // Daftar Ucapan Awal Dikosongkan
+        const DEFAULT_WISHES = [];
 
         // State Global Aplikasi
         let wishesData = [];
@@ -1293,20 +1158,6 @@
                     imgEl.src = src;
                 }
             });
-
-            const qrisImg = document.getElementById('img-qris-custom');
-            const qrisSvg = document.getElementById('svg-qris-placeholder');
-            const qrisSrc = normalizeImageUrl(weddingData.qris_image_url);
-            if (qrisImg && qrisSvg) {
-                if (qrisSrc) {
-                    qrisImg.src = qrisSrc;
-                    qrisImg.classList.remove('hidden');
-                    qrisSvg.classList.add('hidden');
-                } else {
-                    qrisImg.classList.add('hidden');
-                    qrisSvg.classList.remove('hidden');
-                }
-            }
 
             // Sinkronisasi sumber lagu latar MP3 jika diisi
             const audioEl = document.getElementById('bg-music-audio');
@@ -1844,37 +1695,10 @@
 
         /**
          * ====================================================================
-         * 7. TAB AMPLOP DIGITAL & TOMBOL SALIN DINAMIS
+         * 7. TOMBOL SALIN REKENING & ALAMAT LOKASI
          * ====================================================================
          */
-        function initGiftTabsAndCopyButtons() {
-            const tabBtns = document.querySelectorAll('.gift-tab-btn');
-            const panels = document.querySelectorAll('.gift-panel');
-
-            tabBtns.forEach((btn) => {
-                btn.addEventListener('click', () => {
-                    const target = btn.getAttribute('data-gift-tab');
-
-                    tabBtns.forEach((b) => {
-                        b.classList.remove('bg-espresso', 'text-ivory');
-                        b.classList.add('bg-white', 'border', 'border-champagne', 'text-taupe');
-                    });
-                    btn.classList.add('bg-espresso', 'text-ivory');
-                    btn.classList.remove('bg-white', 'border', 'border-champagne', 'text-taupe');
-
-                    panels.forEach((panel) => {
-                        panel.classList.add('hidden');
-                        panel.classList.remove('animate-panelFade');
-                    });
-                    const activePanel = document.getElementById(`gift-panel-${target}`);
-                    if (activePanel) {
-                        activePanel.classList.remove('hidden', 'opacity-0', 'translate-y-6');
-                        void activePanel.offsetWidth;
-                        activePanel.classList.add('animate-panelFade');
-                    }
-                });
-            });
-
+        function initCopyButtons() {
             const copyVenueBtn = document.getElementById('btn-copy-venue-address');
             if (copyVenueBtn) {
                 copyVenueBtn.addEventListener('click', () => {
@@ -1887,14 +1711,6 @@
                 copyBank1Btn.addEventListener('click', () => {
                     const cleanNumber = String(weddingData.bank1_number || '').replace(/\s+/g, '');
                     copyTextToClipboard(cleanNumber, `Nomor Rekening ${weddingData.bank1_name}`);
-                });
-            }
-
-            const copyGiftBtn = document.getElementById('btn-copy-gift-address');
-            if (copyGiftBtn) {
-                copyGiftBtn.addEventListener('click', () => {
-                    const fullGiftAddr = `${weddingData.gift_recipient} - ${weddingData.gift_address} (${weddingData.gift_phone})`;
-                    copyTextToClipboard(fullGiftAddr, 'Alamat pengiriman kado');
                 });
             }
         }
@@ -1946,7 +1762,7 @@
                 if (result.wedding && typeof result.wedding === 'object') {
                     Object.keys(result.wedding).forEach((key) => {
                         const val = result.wedding[key];
-                        if (key === 'qris_image_url' || key === 'website_url' || key === 'music_url' || (val !== undefined && val !== '')) {
+                        if (key === 'website_url' || key === 'music_url' || (val !== undefined && val !== '')) {
                             weddingData[key] = val;
                         }
                     });
@@ -2040,6 +1856,11 @@
 
             const listEl = document.getElementById('wishes-list');
             if (!listEl) return;
+
+            if (wishesData.length === 0) {
+                listEl.innerHTML = `<p class="text-center text-xs text-taupe py-10">Belum ada ucapan dan doa. Jadilah yang pertama mengirimkan doa restu untuk kedua mempelai.</p>`;
+                return;
+            }
 
             if (filtered.length === 0) {
                 listEl.innerHTML = `<p class="text-center text-xs text-taupe py-10">Belum ada ucapan pada kategori ini.</p>`;
@@ -2466,7 +2287,7 @@
                 applyWeddingDataToDOM();
                 renderGallery();
                 initLightboxControls();
-                initGiftTabsAndCopyButtons();
+                initCopyButtons();
                 initRSVPForm();
                 initGuestLinkTool();
                 initScrollReveal();
