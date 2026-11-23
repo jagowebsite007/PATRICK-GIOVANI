@@ -4,7 +4,7 @@
     <!-- Metadata Dasar & Viewport Responsif -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Wedding of Ardiansyah &amp; Nadia</title>
+    <title id="page-title">The Wedding of Ardiansyah &amp; Nadia</title>
 
     <!-- Google Fonts: Cormorant Garamond (Serif Elegan) & Inter (Sans-serif Modern) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,16 +40,11 @@
                         spinSlow: {
                             '0%': { transform: 'rotate(0deg)' },
                             '100%': { transform: 'rotate(360deg)' },
-                        },
-                        pulseSoft: {
-                            '0%, 100%': { opacity: '1' },
-                            '50%': { opacity: '0.55' },
                         }
                     },
                     animation: {
                         fadeUp: 'fadeUp 0.9s ease-out forwards',
                         spinSlow: 'spinSlow 10s linear infinite',
-                        pulseSoft: 'pulseSoft 3s ease-in-out infinite',
                     }
                 }
             }
@@ -68,9 +63,10 @@
         <!-- Latar Belakang Foto dengan Overlay Gelap Elegan -->
         <div class="absolute inset-0 overflow-hidden">
             <img
+                id="img-cover-bg"
                 src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80"
-                alt="Sampul Pernikahan Ardiansyah &amp; Nadia"
-                onerror="this.onerror=null;this.src='https://placehold.co/1200x1600/262320/E5DCCB?text=Ardiansyah+%26+Nadia'"
+                alt="Sampul Pernikahan"
+                onerror="this.onerror=null;this.src='https://placehold.co/1200x1600/262320/E5DCCB?text=The+Wedding'"
                 class="w-full h-full object-cover object-center opacity-40 scale-105"
             >
             <div class="absolute inset-0 bg-gradient-to-b from-espresso/70 via-espresso/50 to-espresso/90"></div>
@@ -78,7 +74,7 @@
 
         <!-- Konten Sampul Tengah -->
         <div class="relative z-10 w-full max-w-md mx-auto px-6 py-10 text-center flex flex-col items-center justify-between min-h-[85vh]">
-            <!-- Label Atas & Monogram -->
+            <!-- Label Atas -->
             <div class="space-y-2 animate-fadeUp">
                 <p class="text-[11px] uppercase tracking-[0.35em] text-champagne font-light">The Wedding of</p>
                 <div class="w-12 h-px bg-gold/60 mx-auto"></div>
@@ -88,6 +84,7 @@
             <div class="my-auto py-6 flex flex-col items-center space-y-5 animate-fadeUp">
                 <div class="w-40 h-52 sm:w-44 sm:h-56 rounded-t-full rounded-b-2xl overflow-hidden border border-champagne/40 p-1.5 bg-ivory/5 backdrop-blur-sm shadow-2xl">
                     <img
+                        id="img-cover-arch"
                         src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80"
                         alt="Potret Mempelai"
                         onerror="this.onerror=null;this.src='https://placehold.co/400x520/3A3530/E5DCCB?text=A+%26+N'"
@@ -97,9 +94,13 @@
 
                 <div>
                     <h1 class="font-serif text-4xl sm:text-5xl font-normal tracking-wide text-ivory">
-                        Ardiansyah <span class="italic font-light text-gold">&amp;</span> Nadia
+                        <span data-bind="groom_short">Ardiansyah</span>
+                        <span class="italic font-light text-gold">&amp;</span>
+                        <span data-bind="bride_short">Nadia</span>
                     </h1>
-                    <p class="mt-2 text-xs uppercase tracking-[0.28em] text-champagne/90">Sabtu, 20 Februari 2027</p>
+                    <p data-bind="event_date_text" class="mt-2 text-xs uppercase tracking-[0.28em] text-champagne/90">
+                        Sabtu, 20 Februari 2027
+                    </p>
                 </div>
             </div>
 
@@ -132,11 +133,11 @@
     <!-- ===================================================================== -->
     <main id="main-content" class="relative w-full min-h-screen pb-28 opacity-0 transition-opacity duration-1000">
 
-        <!-- Bilah Utilitas Atas (Monogram & Pembuat Link Tamu Demo) -->
+        <!-- Bilah Utilitas Atas (Monogram & Pembuat Link Tamu) -->
         <header class="sticky top-0 z-30 bg-ivory/85 backdrop-blur-md border-b border-champagne/60">
             <div class="max-w-4xl mx-auto px-5 py-3 flex items-center justify-between">
                 <a href="#hero" class="font-serif text-xl tracking-widest text-espresso font-medium">
-                    A <span class="text-gold italic">&amp;</span> N
+                    <span id="monogram-groom">A</span> <span class="text-gold italic">&amp;</span> <span id="monogram-bride">N</span>
                 </a>
 
                 <div class="flex items-center gap-2">
@@ -162,25 +163,29 @@
             <div class="max-w-3xl mx-auto text-center">
                 <p class="text-[11px] uppercase tracking-[0.35em] text-gold font-medium">Save The Date</p>
                 <h2 class="mt-3 font-serif text-4xl sm:text-6xl font-normal text-espresso tracking-wide">
-                    Ardiansyah <span class="italic font-light text-gold">&amp;</span> Nadia
+                    <span data-bind="groom_short">Ardiansyah</span>
+                    <span class="italic font-light text-gold">&amp;</span>
+                    <span data-bind="bride_short">Nadia</span>
                 </h2>
                 <p class="mt-3 text-sm text-taupe tracking-wide">
-                    Sabtu, 20 Februari 2027 &bull; Jakarta Selatan
+                    <span data-bind="event_date_text">Sabtu, 20 Februari 2027</span> &bull;
+                    <span data-bind="event_city">Jakarta Selatan</span>
                 </p>
 
                 <!-- Foto Hero Utama Berbentuk Editorial Arch -->
                 <div class="mt-8 sm:mt-10 relative max-w-md mx-auto">
                     <div class="aspect-[4/5] rounded-t-full rounded-b-3xl overflow-hidden border border-champagne p-2 bg-white shadow-lg">
                         <img
+                            id="img-hero"
                             src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80"
-                            alt="Prewedding Ardiansyah dan Nadia"
-                            onerror="this.onerror=null;this.src='https://placehold.co/800x1000/EAE3D5/6E655B?text=Ardiansyah+%26+Nadia'"
+                            alt="Prewedding Mempelai"
+                            onerror="this.onerror=null;this.src='https://placehold.co/800x1000/EAE3D5/6E655B?text=Save+The+Date'"
                             class="w-full h-full object-cover rounded-t-full rounded-b-2xl"
                         >
                     </div>
                     <!-- Lencana Tanggal Melayang -->
                     <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-espresso text-ivory px-6 py-2 rounded-full shadow-md border border-gold/30 whitespace-nowrap">
-                        <span class="text-[11px] uppercase tracking-[0.28em]">20 &bull; 02 &bull; 2027</span>
+                        <span data-bind="event_date_short" class="text-[11px] uppercase tracking-[0.28em]">20 &bull; 02 &bull; 2027</span>
                     </div>
                 </div>
 
@@ -247,10 +252,10 @@
                     </svg>
                 </div>
                 <blockquote class="font-serif italic text-xl sm:text-2xl text-espresso leading-relaxed">
-                    &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
+                    &ldquo;<span data-bind="quote_text">Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.</span>&rdquo;
                 </blockquote>
                 <div class="w-12 h-px bg-gold/60 mx-auto"></div>
-                <p class="text-[11px] uppercase tracking-[0.28em] text-taupe font-medium">QS. Ar-Rum : 21</p>
+                <p data-bind="quote_source" class="text-[11px] uppercase tracking-[0.28em] text-taupe font-medium">QS. Ar-Rum : 21</p>
             </div>
         </section>
 
@@ -272,21 +277,23 @@
                     <div class="md:col-span-5 text-center bg-white border border-champagne/80 rounded-3xl p-7 shadow-sm">
                         <div class="w-44 h-56 mx-auto rounded-t-full rounded-b-2xl overflow-hidden border border-champagne p-1.5 bg-ivory">
                             <img
+                                id="img-groom"
                                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80"
-                                alt="Ardiansyah Pratama"
-                                onerror="this.onerror=null;this.src='https://placehold.co/400x520/EAE3D5/6E655B?text=Ardiansyah'"
+                                alt="Foto Mempelai Pria"
+                                onerror="this.onerror=null;this.src='https://placehold.co/400x520/EAE3D5/6E655B?text=Mempelai+Pria'"
                                 class="w-full h-full object-cover rounded-t-full rounded-b-xl"
                             >
                         </div>
                         <p class="mt-6 text-[10px] uppercase tracking-[0.25em] text-gold font-medium">Mempelai Pria</p>
-                        <h4 class="mt-1.5 font-serif text-3xl text-espresso">Ardiansyah Pratama, S.T.</h4>
+                        <h4 data-bind="groom_name" class="mt-1.5 font-serif text-3xl text-espresso">Ardiansyah Pratama, S.T.</h4>
                         <p class="mt-2 text-xs text-taupe leading-relaxed">
-                            Putra pertama dari<br>
-                            <span class="font-medium text-espresso">Bapak H. Hendra Wijaya</span> &amp;<br>
-                            <span class="font-medium text-espresso">Ibu Hj. Ratna Kusuma</span>
+                            <span data-bind="groom_child_order">Putra pertama dari</span><br>
+                            <span data-bind="groom_parents_father" class="font-medium text-espresso">Bapak H. Hendra Wijaya</span> &amp;<br>
+                            <span data-bind="groom_parents_mother" class="font-medium text-espresso">Ibu Hj. Ratna Kusuma</span>
                         </p>
                         <a
-                            href="https://instagram.com"
+                            id="link-groom-ig"
+                            href="https://instagram.com/ardiansyah.p"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ivory border border-champagne text-xs text-taupe hover:text-espresso hover:bg-silk transition-colors"
@@ -296,7 +303,7 @@
                                 <circle cx="12" cy="12" r="4"/>
                                 <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/>
                             </svg>
-                            <span>@ardiansyah.p</span>
+                            <span data-bind="groom_instagram">@ardiansyah.p</span>
                         </a>
                     </div>
 
@@ -309,21 +316,23 @@
                     <div class="md:col-span-5 text-center bg-white border border-champagne/80 rounded-3xl p-7 shadow-sm">
                         <div class="w-44 h-56 mx-auto rounded-t-full rounded-b-2xl overflow-hidden border border-champagne p-1.5 bg-ivory">
                             <img
+                                id="img-bride"
                                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80"
-                                alt="Nadia Larasati"
-                                onerror="this.onerror=null;this.src='https://placehold.co/400x520/EAE3D5/6E655B?text=Nadia'"
+                                alt="Foto Mempelai Wanita"
+                                onerror="this.onerror=null;this.src='https://placehold.co/400x520/EAE3D5/6E655B?text=Mempelai+Wanita'"
                                 class="w-full h-full object-cover rounded-t-full rounded-b-xl"
                             >
                         </div>
                         <p class="mt-6 text-[10px] uppercase tracking-[0.25em] text-gold font-medium">Mempelai Wanita</p>
-                        <h4 class="mt-1.5 font-serif text-3xl text-espresso">Nadia Larasati, S.Ds.</h4>
+                        <h4 data-bind="bride_name" class="mt-1.5 font-serif text-3xl text-espresso">Nadia Larasati, S.Ds.</h4>
                         <p class="mt-2 text-xs text-taupe leading-relaxed">
-                            Putri kedua dari<br>
-                            <span class="font-medium text-espresso">Bapak Ir. Bambang Setiawan</span> &amp;<br>
-                            <span class="font-medium text-espresso">Ibu Dra. Lestari Putri</span>
+                            <span data-bind="bride_child_order">Putri kedua dari</span><br>
+                            <span data-bind="bride_parents_father" class="font-medium text-espresso">Bapak Ir. Bambang Setiawan</span> &amp;<br>
+                            <span data-bind="bride_parents_mother" class="font-medium text-espresso">Ibu Dra. Lestari Putri</span>
                         </p>
                         <a
-                            href="https://instagram.com"
+                            id="link-bride-ig"
+                            href="https://instagram.com/nadialarasati"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ivory border border-champagne text-xs text-taupe hover:text-espresso hover:bg-silk transition-colors"
@@ -333,7 +342,7 @@
                                 <circle cx="12" cy="12" r="4"/>
                                 <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/>
                             </svg>
-                            <span>@nadialarasati</span>
+                            <span data-bind="bride_instagram">@nadialarasati</span>
                         </a>
                     </div>
                 </div>
@@ -361,11 +370,11 @@
                             </span>
                             <h4 class="mt-4 font-serif text-3xl text-espresso">Akad Nikah</h4>
                             <div class="w-10 h-px bg-gold/50 mx-auto my-4"></div>
-                            <p class="text-sm font-medium text-espresso">Sabtu, 20 Februari 2027</p>
-                            <p class="mt-1 text-xs text-taupe">Pukul 08.00 &ndash; 10.00 WIB</p>
-                            <p class="mt-4 text-sm font-medium text-espresso">Nusantara Ballroom, The Dharmawangsa</p>
-                            <p class="mt-1 text-xs text-taupe leading-relaxed">
-                                Jl. Brawijaya Raya No. 26, Kebayoran Baru,<br>Jakarta Selatan, DKI Jakarta 12160
+                            <p data-bind="event_date_text" class="text-sm font-medium text-espresso">Sabtu, 20 Februari 2027</p>
+                            <p data-bind="akad_time" class="mt-1 text-xs text-taupe">Pukul 08.00 &ndash; 10.00 WIB</p>
+                            <p data-bind="akad_venue" class="mt-4 text-sm font-medium text-espresso">Nusantara Ballroom, The Dharmawangsa</p>
+                            <p data-bind="venue_address" class="mt-1 text-xs text-taupe leading-relaxed">
+                                Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160
                             </p>
                         </div>
                     </div>
@@ -378,11 +387,11 @@
                             </span>
                             <h4 class="mt-4 font-serif text-3xl text-ivory">Resepsi Pernikahan</h4>
                             <div class="w-10 h-px bg-gold/60 mx-auto my-4"></div>
-                            <p class="text-sm font-medium text-ivory">Sabtu, 20 Februari 2027</p>
-                            <p class="mt-1 text-xs text-champagne/80">Pukul 11.00 &ndash; 14.00 WIB</p>
-                            <p class="mt-4 text-sm font-medium text-champagne">Grand Garden &amp; Ballroom, The Dharmawangsa</p>
-                            <p class="mt-1 text-xs text-champagne/75 leading-relaxed">
-                                Jl. Brawijaya Raya No. 26, Kebayoran Baru,<br>Jakarta Selatan, DKI Jakarta 12160
+                            <p data-bind="event_date_text" class="text-sm font-medium text-ivory">Sabtu, 20 Februari 2027</p>
+                            <p data-bind="resepsi_time" class="mt-1 text-xs text-champagne/80">Pukul 11.00 &ndash; 14.00 WIB</p>
+                            <p data-bind="resepsi_venue" class="mt-4 text-sm font-medium text-champagne">Grand Garden &amp; Ballroom, The Dharmawangsa</p>
+                            <p data-bind="venue_address" class="mt-1 text-xs text-champagne/75 leading-relaxed">
+                                Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160
                             </p>
                         </div>
                     </div>
@@ -392,7 +401,8 @@
                 <div class="bg-white border border-champagne/80 rounded-3xl p-4 sm:p-6 shadow-sm">
                     <div class="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl overflow-hidden border border-champagne/60 bg-ivory">
                         <iframe
-                            title="Peta Lokasi The Dharmawangsa Jakarta"
+                            id="maps-iframe"
+                            title="Peta Lokasi Acara"
                             src="https://www.google.com/maps?q=The+Dharmawangsa+Jakarta&output=embed"
                             class="w-full h-full border-0"
                             loading="lazy"
@@ -401,18 +411,19 @@
                     </div>
                     <div class="mt-5 flex flex-wrap items-center justify-between gap-4 px-1">
                         <div>
-                            <h5 class="font-serif text-xl text-espresso">The Dharmawangsa Jakarta</h5>
-                            <p class="text-xs text-taupe">Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan</p>
+                            <h5 data-bind="venue_name" class="font-serif text-xl text-espresso">The Dharmawangsa Jakarta</h5>
+                            <p data-bind="venue_address" class="text-xs text-taupe">Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2.5">
                             <button
+                                id="btn-copy-venue-address"
                                 type="button"
-                                onclick="copyTextToClipboard('The Dharmawangsa Jakarta, Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan', 'Alamat lokasi acara')"
                                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ivory border border-champagne text-xs uppercase tracking-[0.16em] text-espresso hover:bg-silk transition-colors cursor-pointer"
                             >
                                 <span>Salin Alamat</span>
                             </button>
                             <a
+                                id="link-google-maps"
                                 href="https://maps.google.com/?q=The+Dharmawangsa+Jakarta"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -441,9 +452,9 @@
                     <p class="mt-2 text-sm text-taupe">Ketuk foto untuk memperbesar dan menikmati setiap kenangan perjalanan kami.</p>
                 </div>
 
-                <!-- Grid Foto Editorial -->
+                <!-- Grid Foto Editorial (Otomatis sinkron dari tab Galeri_Foto) -->
                 <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                    <!-- Item Foto dirender dinamis via JS agar terhubung sempurna dengan Lightbox -->
+                    <!-- Item Foto dirender dinamis via JavaScript -->
                 </div>
 
                 <!-- Kartu Video Highlight Prewedding -->
@@ -453,7 +464,7 @@
                             <p class="text-[11px] uppercase tracking-[0.22em] text-gold">Prewedding Film</p>
                             <h4 class="font-serif text-2xl text-espresso">A Quiet Promise &mdash; Teaser</h4>
                         </div>
-                        <span class="text-xs text-taupe">Durasi 01:15 &bull; Editorial Highlight</span>
+                        <span class="text-xs text-taupe">Editorial Highlight</span>
                     </div>
 
                     <!-- Pratinjau Video Interaktif -->
@@ -464,6 +475,7 @@
                         class="group relative aspect-video w-full rounded-2xl overflow-hidden bg-espresso cursor-pointer"
                     >
                         <img
+                            id="img-video-thumb"
                             src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80"
                             alt="Thumbnail Video Prewedding"
                             onerror="this.onerror=null;this.src='https://placehold.co/1200x675/262320/E5DCCB?text=Prewedding+Film+Highlight'"
@@ -522,20 +534,20 @@
 
                 <!-- Konten Tab 1: Transfer Bank -->
                 <div id="gift-panel-bank" class="gift-panel grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <!-- Kartu BCA -->
+                    <!-- Kartu Bank 1 -->
                     <div class="bg-gradient-to-br from-espresso to-[#3D3731] text-ivory rounded-3xl p-6 shadow-md flex flex-col justify-between min-h-[205px] border border-gold/30">
                         <div class="flex items-center justify-between">
-                            <span class="font-serif text-2xl tracking-wider text-champagne">BCA</span>
-                            <span class="text-[10px] uppercase tracking-[0.2em] text-champagne/70">Bank Central Asia</span>
+                            <span data-bind="bank1_name" class="font-serif text-2xl tracking-wider text-champagne">BCA</span>
+                            <span data-bind="bank1_label" class="text-[10px] uppercase tracking-[0.2em] text-champagne/70">Bank Central Asia</span>
                         </div>
                         <div class="my-4">
                             <p class="text-[11px] text-champagne/70">Nomor Rekening</p>
-                            <p class="mt-1 font-mono text-xl tracking-widest text-ivory">8290 1456 78</p>
-                            <p class="mt-1.5 text-xs text-champagne">a.n. Ardiansyah Pratama</p>
+                            <p data-bind="bank1_number" class="mt-1 font-mono text-xl tracking-widest text-ivory">8290 1456 78</p>
+                            <p class="mt-1.5 text-xs text-champagne">a.n. <span data-bind="bank1_holder">Ardiansyah Pratama</span></p>
                         </div>
                         <button
+                            id="btn-copy-bank1"
                             type="button"
-                            onclick="copyTextToClipboard('8290145678', 'Nomor Rekening BCA')"
                             class="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-full bg-ivory/15 hover:bg-ivory/25 border border-champagne/30 text-xs uppercase tracking-[0.18em] text-ivory transition-colors cursor-pointer"
                         >
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
@@ -545,20 +557,20 @@
                         </button>
                     </div>
 
-                    <!-- Kartu Mandiri -->
+                    <!-- Kartu Bank 2 -->
                     <div class="bg-white border border-champagne rounded-3xl p-6 shadow-sm flex flex-col justify-between min-h-[205px]">
                         <div class="flex items-center justify-between">
-                            <span class="font-serif text-2xl tracking-wider text-espresso">Mandiri</span>
-                            <span class="text-[10px] uppercase tracking-[0.2em] text-taupe">Bank Mandiri</span>
+                            <span data-bind="bank2_name" class="font-serif text-2xl tracking-wider text-espresso">Mandiri</span>
+                            <span data-bind="bank2_label" class="text-[10px] uppercase tracking-[0.2em] text-taupe">Bank Mandiri</span>
                         </div>
                         <div class="my-4">
                             <p class="text-[11px] text-taupe">Nomor Rekening</p>
-                            <p class="mt-1 font-mono text-xl tracking-widest text-espresso">1240 0098 7654 3</p>
-                            <p class="mt-1.5 text-xs text-taupe">a.n. Nadia Larasati</p>
+                            <p data-bind="bank2_number" class="mt-1 font-mono text-xl tracking-widest text-espresso">1240 0098 7654 3</p>
+                            <p class="mt-1.5 text-xs text-taupe">a.n. <span data-bind="bank2_holder">Nadia Larasati</span></p>
                         </div>
                         <button
+                            id="btn-copy-bank2"
                             type="button"
-                            onclick="copyTextToClipboard('1240009876543', 'Nomor Rekening Mandiri')"
                             class="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-full bg-ivory hover:bg-silk border border-champagne text-xs uppercase tracking-[0.18em] text-espresso transition-colors cursor-pointer"
                         >
                             <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
@@ -573,11 +585,20 @@
                 <div id="gift-panel-qris" class="gift-panel hidden">
                     <div class="max-w-sm mx-auto bg-white border border-champagne rounded-3xl p-7 text-center shadow-sm">
                         <p class="text-[11px] uppercase tracking-[0.25em] text-gold font-medium">Scan QRIS</p>
-                        <p class="mt-1 font-serif text-xl text-espresso">Ardiansyah &amp; Nadia</p>
+                        <p class="mt-1 font-serif text-xl text-espresso">
+                            <span data-bind="groom_short">Ardiansyah</span> &amp; <span data-bind="bride_short">Nadia</span>
+                        </p>
 
-                        <!-- Ilustrasi QRIS SVG Bersih (Contoh Data Sementara) -->
+                        <!-- Gambar QRIS Asli dari Spreadsheet (tampil otomatis jika qris_image_url diisi) -->
                         <div class="my-5 p-4 bg-ivory border border-champagne/80 rounded-2xl inline-block">
-                            <svg class="w-44 h-44 text-espresso" viewBox="0 0 100 100" fill="currentColor" aria-label="Kode QRIS Contoh">
+                            <img
+                                id="img-qris-custom"
+                                src=""
+                                alt="QRIS Pembayaran"
+                                class="hidden w-52 h-52 object-contain rounded-xl"
+                            >
+                            <!-- Ilustrasi QRIS SVG Bawaan (jika qris_image_url masih kosong) -->
+                            <svg id="svg-qris-placeholder" class="w-44 h-44 text-espresso" viewBox="0 0 100 100" fill="currentColor" aria-label="Kode QRIS Contoh">
                                 <rect x="6" y="6" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="5"/>
                                 <rect x="13" y="13" width="12" height="12" rx="1"/>
                                 <rect x="68" y="6" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="5"/>
@@ -604,7 +625,7 @@
                             </svg>
                         </div>
                         <p class="text-xs text-taupe leading-relaxed">
-                            Mendukung seluruh aplikasi m-Banking, GoPay, OVO, Dana, dan ShopeePay. (Contoh QRIS sementara)
+                            Mendukung seluruh aplikasi m-Banking, GoPay, OVO, Dana, dan ShopeePay.
                         </p>
                     </div>
                 </div>
@@ -618,15 +639,14 @@
                             </svg>
                         </div>
                         <h4 class="mt-4 font-serif text-2xl text-espresso">Alamat Penerima Kado</h4>
-                        <p class="mt-2 text-sm font-medium text-espresso">Nadia Larasati &amp; Ardiansyah Pratama</p>
+                        <p data-bind="gift_recipient" class="mt-2 text-sm font-medium text-espresso">Nadia Larasati &amp; Ardiansyah Pratama</p>
                         <p class="mt-1.5 text-xs text-taupe leading-relaxed">
-                            Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan,<br>
-                            Jakarta Selatan, DKI Jakarta 12730<br>
-                            Telp: 0812-3456-7890
+                            <span data-bind="gift_address">Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12730</span><br>
+                            Telp: <span data-bind="gift_phone">0812-3456-7890</span>
                         </p>
                         <button
+                            id="btn-copy-gift-address"
                             type="button"
-                            onclick="copyTextToClipboard('Nadia Larasati & Ardiansyah Pratama - Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan, Jakarta Selatan 12730 (0812-3456-7890)', 'Alamat pengiriman kado')"
                             class="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-espresso text-ivory text-xs uppercase tracking-[0.18em] hover:bg-taupe transition-colors cursor-pointer"
                         >
                             <span>Salin Alamat Lengkap</span>
@@ -756,7 +776,7 @@
                                 <button
                                     id="btn-refresh-wishes"
                                     type="button"
-                                    title="Muat ulang ucapan dari Google Sheets"
+                                    title="Muat ulang semua data dari Google Sheets"
                                     class="p-1.5 rounded-full bg-ivory text-taupe border border-champagne hover:text-espresso transition-colors cursor-pointer"
                                 >
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -786,9 +806,11 @@
                 </p>
                 <div class="w-12 h-px bg-gold/50 mx-auto my-4"></div>
                 <h5 class="font-serif text-3xl sm:text-4xl tracking-wide text-ivory">
-                    Ardiansyah <span class="italic text-gold">&amp;</span> Nadia
+                    <span data-bind="groom_short">Ardiansyah</span>
+                    <span class="italic text-gold">&amp;</span>
+                    <span data-bind="bride_short">Nadia</span>
                 </h5>
-                <p class="pt-4 text-[11px] text-champagne/50 tracking-widest uppercase">
+                <p data-bind="hashtag" class="pt-4 text-[11px] text-champagne/50 tracking-widest uppercase">
                     #ArdiansyahNadiaForever &bull; 2027
                 </p>
             </div>
@@ -899,7 +921,9 @@
             <div class="flex items-center justify-between px-6 py-4 border-b border-champagne/15">
                 <div>
                     <p class="text-[10px] uppercase tracking-[0.25em] text-gold">Prewedding Highlight</p>
-                    <h4 class="font-serif text-xl text-ivory">Ardiansyah &amp; Nadia &mdash; Teaser</h4>
+                    <h4 class="font-serif text-xl text-ivory">
+                        <span data-bind="groom_short">Ardiansyah</span> &amp; <span data-bind="bride_short">Nadia</span> &mdash; Teaser
+                    </h4>
                 </div>
                 <button id="video-close" type="button" aria-label="Tutup video" class="w-9 h-9 rounded-full bg-ivory/10 hover:bg-ivory/20 text-ivory flex items-center justify-center cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -908,7 +932,7 @@
                 </button>
             </div>
 
-            <!-- Slideshow Sinematik Demo (Siap diganti iframe YouTube/Vimeo asli) -->
+            <!-- Slideshow Sinematik dari Foto Galeri -->
             <div class="relative aspect-video bg-black overflow-hidden">
                 <img id="video-reel-img" src="" alt="Prewedding Reel" class="w-full h-full object-cover transition-all duration-1000 scale-105 opacity-90">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 flex flex-col justify-end p-6 text-center">
@@ -920,7 +944,7 @@
             </div>
 
             <div class="px-6 py-3 bg-ivory/5 text-center text-[11px] text-champagne/70">
-                Mode Pratinjau Sinematik &bull; Dapat dihubungkan langsung dengan tautan YouTube / Vimeo asli Anda.
+                Mode Pratinjau Sinematik &bull; Otomatis menampilkan rangkaian foto dari tab Galeri_Foto.
             </div>
         </div>
     </div>
@@ -989,32 +1013,73 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- LOGIKA JAVASCRIPT INTERAKTIF                                          -->
+    <!-- LOGIKA JAVASCRIPT INTERAKTIF + FULL SYNC GOOGLE SHEETS                -->
     <!-- ===================================================================== -->
     <script>
         /**
          * ====================================================================
-         * DATA KONFIGURASI & CONTOH SEMENTARA
+         * KONFIGURASI KONEKSI GOOGLE SHEETS
          * ====================================================================
+         * Tempelkan URL Web App dari Google Apps Script di bawah ini.
+         * Setelah diisi, semua nama, tanggal, lokasi, rekening, QRIS, foto
+         * profil, galeri foto, dan RSVP akan otomatis mengikuti Google Sheets!
          */
-        const WEDDING_CONFIG = {
-            groomName: 'Ardiansyah Pratama',
-            brideName: 'Nadia Larasati',
-            // Tanggal acara (WIB / UTC+7)
-            eventDateISO: '2027-02-20T08:00:00+07:00',
-            eventEndISO: '2027-02-20T14:00:00+07:00',
-            venueName: 'The Dharmawangsa Jakarta',
-            venueAddress: 'Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160',
-            // =================================================================
-            // TEMPAT MENEMPELKAN URL WEB APP GOOGLE APPS SCRIPT (OPSI A)
-            // Contoh: 'https://script.google.com/macros/s/AKfycbx.../exec'
-            // Biarkan kosong ('') jika masih mencoba dalam Mode Demo.
-            // =================================================================
-            googleScriptUrl: ''
+        const GOOGLE_SCRIPT_URL = ''; // Contoh: 'https://script.google.com/macros/s/AKfycbx.../exec'
+
+        /**
+         * DATA BAWAAN (Tampil langsung sambil menunggu sinkronisasi Sheets
+         * atau saat masih berjalan di Mode Demo).
+         */
+        let weddingData = {
+            groom_short: 'Ardiansyah',
+            bride_short: 'Nadia',
+            groom_name: 'Ardiansyah Pratama, S.T.',
+            bride_name: 'Nadia Larasati, S.Ds.',
+            groom_child_order: 'Putra pertama dari',
+            groom_parents_father: 'Bapak H. Hendra Wijaya',
+            groom_parents_mother: 'Ibu Hj. Ratna Kusuma',
+            groom_instagram: '@ardiansyah.p',
+            bride_child_order: 'Putri kedua dari',
+            bride_parents_father: 'Bapak Ir. Bambang Setiawan',
+            bride_parents_mother: 'Ibu Dra. Lestari Putri',
+            bride_instagram: '@nadialarasati',
+            event_date_text: 'Sabtu, 20 Februari 2027',
+            event_city: 'Jakarta Selatan',
+            event_date_short: '20 • 02 • 2027',
+            event_date_iso: '2027-02-20T08:00:00+07:00',
+            event_end_iso: '2027-02-20T14:00:00+07:00',
+            akad_time: 'Pukul 08.00 – 10.00 WIB',
+            akad_venue: 'Nusantara Ballroom, The Dharmawangsa',
+            resepsi_time: 'Pukul 11.00 – 14.00 WIB',
+            resepsi_venue: 'Grand Garden & Ballroom, The Dharmawangsa',
+            venue_name: 'The Dharmawangsa Jakarta',
+            venue_address: 'Jl. Brawijaya Raya No. 26, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 12160',
+            maps_query: 'The Dharmawangsa Jakarta',
+            quote_text: 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.',
+            quote_source: 'QS. Ar-Rum : 21',
+            hashtag: '#ArdiansyahNadiaForever • 2027',
+            cover_bg_photo: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80',
+            cover_arch_photo: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+            hero_photo: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80',
+            groom_photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80',
+            bride_photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80',
+            video_thumb_photo: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80',
+            bank1_name: 'BCA',
+            bank1_label: 'Bank Central Asia',
+            bank1_number: '8290 1456 78',
+            bank1_holder: 'Ardiansyah Pratama',
+            bank2_name: 'Mandiri',
+            bank2_label: 'Bank Mandiri',
+            bank2_number: '1240 0098 7654 3',
+            bank2_holder: 'Nadia Larasati',
+            qris_image_url: '',
+            gift_recipient: 'Nadia Larasati & Ardiansyah Pratama',
+            gift_address: 'Jl. Kemang Selatan VIII No. 14B, Bangka, Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12730',
+            gift_phone: '0812-3456-7890'
         };
 
-        // Data Galeri Foto Prewedding (Dilengkapi fallback aman)
-        const GALLERY_ITEMS = [
+        // Galeri Foto Bawaan (Otomatis diganti isi tab Galeri_Foto jika terhubung Google Sheets)
+        let galleryItems = [
             {
                 src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80',
                 fallback: 'https://placehold.co/800x1000/EAE3D5/6E655B?text=Moment+01',
@@ -1047,14 +1112,14 @@
             }
         ];
 
-        // Contoh Ucapan Awal agar Buku Tamu Langsung Terlihat Hidup pada Mode Demo
+        // Contoh Ucapan Awal pada Mode Demo
         const DEFAULT_WISHES = [
             {
                 id: 'w1',
                 name: 'Dimas & Clarissa',
                 attendance: 'Hadir',
                 guests: 2,
-                wish: 'MasyaAllah, selamat menempuh hidup baru Ardiansyah & Nadia! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah dan selalu dilimpahi keberkahan.',
+                wish: 'MasyaAllah, selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah dan selalu dilimpahi keberkahan.',
                 createdAt: '2 jam lalu'
             },
             {
@@ -1062,7 +1127,7 @@
                 name: 'dr. Farah Aulia',
                 attendance: 'Hadir',
                 guests: 1,
-                wish: 'Happy wedding Nadia sayang & Mas Ardi! Undangan digitalnya elegan banget. InsyaAllah hadir di resepsi ya!',
+                wish: 'Happy wedding! Undangan digitalnya elegan banget. InsyaAllah hadir di resepsi ya!',
                 createdAt: '5 jam lalu'
             },
             {
@@ -1078,7 +1143,7 @@
                 name: 'Keluarga Besar Bapak Arifin',
                 attendance: 'Tidak Hadir',
                 guests: 0,
-                wish: 'Mohon maaf belum dapat hadir secara langsung karena sedang berada di luar negeri. Doa terbaik selalu menyertai pernikahan Ardi dan Nadia.',
+                wish: 'Mohon maaf belum dapat hadir secara langsung karena sedang berada di luar kota. Doa terbaik selalu menyertai pernikahan kalian.',
                 createdAt: '2 hari lalu'
             }
         ];
@@ -1088,6 +1153,7 @@
         let activeWishFilter = 'all';
         let currentLightboxIndex = 0;
         let touchStartX = 0;
+        let countdownTimer = null;
         let videoReelTimer = null;
         let toastTimeout = null;
         let isMusicPlaying = false;
@@ -1096,9 +1162,35 @@
 
         /**
          * ====================================================================
-         * 1. NOTIFIKASI TOAST & SALIN TEKS KE CLIPBOARD
+         * HELPER UMUM: ESCAPE HTML, NORMALISASI GOOGLE DRIVE, TOAST, CLIPBOARD
          * ====================================================================
          */
+        function escapeHTML(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function normalizeImageUrl(rawUrl) {
+            const url = String(rawUrl || '').trim();
+            if (!url) return '';
+
+            let match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+            if (match && match[1]) {
+                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1600`;
+            }
+
+            match = url.match(/drive\.google\.com\/(?:open|uc)\?[^#]*\bid=([a-zA-Z0-9_-]+)/i);
+            if (match && match[1]) {
+                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1600`;
+            }
+
+            return url;
+        }
+
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const msgEl = document.getElementById('toast-message');
@@ -1135,6 +1227,79 @@
                 console.error('Gagal menyalin teks:', err);
                 showToast('Gagal menyalin otomatis. Silakan salin secara manual.');
             }
+        }
+
+        /**
+         * ====================================================================
+         * 1. MENERAPKAN DATA PENGANTIN & FOTO KE HALAMAN (SINKRON SPREADSHEET)
+         * ====================================================================
+         */
+        function applyWeddingDataToDOM() {
+            // 1. Perbarui seluruh elemen teks berdasar atribut data-bind
+            document.querySelectorAll('[data-bind]').forEach((el) => {
+                const key = el.getAttribute('data-bind');
+                if (weddingData[key] !== undefined && weddingData[key] !== '') {
+                    el.textContent = weddingData[key];
+                }
+            });
+
+            // 2. Judul tab browser & monogram header
+            document.title = `The Wedding of ${weddingData.groom_short} & ${weddingData.bride_short}`;
+            const monoGroom = document.getElementById('monogram-groom');
+            const monoBride = document.getElementById('monogram-bride');
+            if (monoGroom) monoGroom.textContent = (weddingData.groom_short || 'A').trim().charAt(0).toUpperCase();
+            if (monoBride) monoBride.textContent = (weddingData.bride_short || 'N').trim().charAt(0).toUpperCase();
+
+            // 3. Tautan Instagram Mempelai
+            const groomIgClean = String(weddingData.groom_instagram || '').replace(/^@/, '').trim();
+            const brideIgClean = String(weddingData.bride_instagram || '').replace(/^@/, '').trim();
+            const groomIgLink = document.getElementById('link-groom-ig');
+            const brideIgLink = document.getElementById('link-bride-ig');
+            if (groomIgLink && groomIgClean) groomIgLink.href = `https://instagram.com/${encodeURIComponent(groomIgClean)}`;
+            if (brideIgLink && brideIgClean) brideIgLink.href = `https://instagram.com/${encodeURIComponent(brideIgClean)}`;
+
+            // 4. Foto-foto utama (mendukung link biasa & Google Drive)
+            const photoBindings = [
+                { id: 'img-cover-bg', key: 'cover_bg_photo' },
+                { id: 'img-cover-arch', key: 'cover_arch_photo' },
+                { id: 'img-hero', key: 'hero_photo' },
+                { id: 'img-groom', key: 'groom_photo' },
+                { id: 'img-bride', key: 'bride_photo' },
+                { id: 'img-video-thumb', key: 'video_thumb_photo' }
+            ];
+            photoBindings.forEach(({ id, key }) => {
+                const imgEl = document.getElementById(id);
+                const src = normalizeImageUrl(weddingData[key]);
+                if (imgEl && src) {
+                    imgEl.src = src;
+                }
+            });
+
+            // 5. QRIS kustom dari Spreadsheet (jika qris_image_url diisi)
+            const qrisImg = document.getElementById('img-qris-custom');
+            const qrisSvg = document.getElementById('svg-qris-placeholder');
+            const qrisSrc = normalizeImageUrl(weddingData.qris_image_url);
+            if (qrisImg && qrisSvg) {
+                if (qrisSrc) {
+                    qrisImg.src = qrisSrc;
+                    qrisImg.classList.remove('hidden');
+                    qrisSvg.classList.add('hidden');
+                } else {
+                    qrisImg.classList.add('hidden');
+                    qrisSvg.classList.remove('hidden');
+                }
+            }
+
+            // 6. Peta & Tautan Google Maps
+            const mapQuery = encodeURIComponent(weddingData.maps_query || weddingData.venue_name || 'Jakarta');
+            const mapsIframe = document.getElementById('maps-iframe');
+            const mapsLink = document.getElementById('link-google-maps');
+            if (mapsIframe) mapsIframe.src = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+            if (mapsLink) mapsLink.href = `https://maps.google.com/?q=${mapQuery}`;
+
+            // 7. Perbarui Countdown & Tombol Kalender sesuai tanggal terbaru
+            startCountdown();
+            updateCalendarLinks();
         }
 
         /**
@@ -1189,7 +1354,6 @@
                     }).connect(reverb);
                     musicSynth.volume.value = -16;
 
-                    // Progresi akor piano ambient lembut bernuansa romantis
                     const chords = [
                         ['C4', 'E4', 'G4', 'B4'],
                         ['A3', 'E4', 'A4', 'C5'],
@@ -1260,16 +1424,18 @@
          * ====================================================================
          */
         function startCountdown() {
-            const targetTime = new Date(WEDDING_CONFIG.eventDateISO).getTime();
+            clearInterval(countdownTimer);
+
+            const parsedTarget = new Date(weddingData.event_date_iso).getTime();
+            const targetTime = Number.isNaN(parsedTarget) ? Date.now() : parsedTarget;
+
             const elDays = document.getElementById('cd-days');
             const elHours = document.getElementById('cd-hours');
             const elMinutes = document.getElementById('cd-minutes');
             const elSeconds = document.getElementById('cd-seconds');
 
             function updateTick() {
-                const now = Date.now();
-                const diff = Math.max(0, targetTime - now);
-
+                const diff = Math.max(0, targetTime - Date.now());
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
                 const minutes = Math.floor((diff / (1000 * 60)) % 60);
@@ -1282,7 +1448,7 @@
             }
 
             updateTick();
-            setInterval(updateTick, 1000);
+            countdownTimer = setInterval(updateTick, 1000);
         }
 
         /**
@@ -1291,17 +1457,18 @@
          * ====================================================================
          */
         function formatCalendarUTC(isoStr) {
-            return new Date(isoStr).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            const d = new Date(isoStr);
+            const validDate = Number.isNaN(d.getTime()) ? new Date() : d;
+            return validDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
         }
 
-        function initCalendarButtons() {
-            const title = `The Wedding of ${WEDDING_CONFIG.groomName} & ${WEDDING_CONFIG.brideName}`;
-            const details = `Akad Nikah & Resepsi Pernikahan ${WEDDING_CONFIG.groomName} & ${WEDDING_CONFIG.brideName}.`;
-            const location = `${WEDDING_CONFIG.venueName}, ${WEDDING_CONFIG.venueAddress}`;
-            const startUTC = formatCalendarUTC(WEDDING_CONFIG.eventDateISO);
-            const endUTC = formatCalendarUTC(WEDDING_CONFIG.eventEndISO);
+        function updateCalendarLinks() {
+            const title = `The Wedding of ${weddingData.groom_short} & ${weddingData.bride_short}`;
+            const details = `Akad Nikah & Resepsi Pernikahan ${weddingData.groom_name} & ${weddingData.bride_name}.`;
+            const location = `${weddingData.venue_name}, ${weddingData.venue_address}`;
+            const startUTC = formatCalendarUTC(weddingData.event_date_iso);
+            const endUTC = formatCalendarUTC(weddingData.event_end_iso);
 
-            // Tautan Google Calendar
             const gcalBtn = document.getElementById('btn-google-calendar');
             if (gcalBtn) {
                 const gcalUrl = new URL('https://calendar.google.com/calendar/render');
@@ -1312,70 +1479,89 @@
                 gcalUrl.searchParams.set('location', location);
                 gcalBtn.href = gcalUrl.toString();
             }
+        }
 
-            // Unduh file .ICS (Apple Calendar / Outlook / Kalender HP)
+        function initCalendarDownload() {
             const icsBtn = document.getElementById('btn-download-ics');
-            if (icsBtn) {
-                icsBtn.addEventListener('click', () => {
-                    const icsContent = [
-                        'BEGIN:VCALENDAR',
-                        'VERSION:2.0',
-                        'PRODID:-//Undangan Digital//Minimalist Luxury//ID',
-                        'BEGIN:VEVENT',
-                        `UID:wedding-${Date.now()}@undangan.digital`,
-                        `DTSTAMP:${formatCalendarUTC(new Date().toISOString())}`,
-                        `DTSTART:${startUTC}`,
-                        `DTEND:${endUTC}`,
-                        `SUMMARY:${title}`,
-                        `DESCRIPTION:${details}`,
-                        `LOCATION:${location}`,
-                        'END:VEVENT',
-                        'END:VCALENDAR'
-                    ].join('\r\n');
+            if (!icsBtn) return;
 
-                    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = 'Save-The-Date-Ardiansyah-Nadia.ics';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                    showToast('Pengingat kalender (.ics) berhasil diunduh.');
-                });
-            }
+            icsBtn.addEventListener('click', () => {
+                const title = `The Wedding of ${weddingData.groom_short} & ${weddingData.bride_short}`;
+                const details = `Akad Nikah & Resepsi Pernikahan ${weddingData.groom_name} & ${weddingData.bride_name}.`;
+                const location = `${weddingData.venue_name}, ${weddingData.venue_address}`;
+                const startUTC = formatCalendarUTC(weddingData.event_date_iso);
+                const endUTC = formatCalendarUTC(weddingData.event_end_iso);
+
+                const icsContent = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Undangan Digital//Minimalist Luxury//ID',
+                    'BEGIN:VEVENT',
+                    `UID:wedding-${Date.now()}@undangan.digital`,
+                    `DTSTAMP:${formatCalendarUTC(new Date().toISOString())}`,
+                    `DTSTART:${startUTC}`,
+                    `DTEND:${endUTC}`,
+                    `SUMMARY:${title}`,
+                    `DESCRIPTION:${details}`,
+                    `LOCATION:${location}`,
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\r\n');
+
+                const safeFileName = `Save-The-Date-${weddingData.groom_short}-${weddingData.bride_short}.ics`
+                    .replace(/[^a-zA-Z0-9._-]/g, '');
+
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = safeFileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showToast('Pengingat kalender (.ics) berhasil diunduh.');
+            });
         }
 
         /**
          * ====================================================================
-         * 6. GALERI FOTO & LIGHTBOX INTERAKTIF
+         * 6. GALERI FOTO & LIGHTBOX INTERAKTIF (SINKRON TAB GALERI_FOTO)
          * ====================================================================
          */
         function renderGallery() {
             const grid = document.getElementById('gallery-grid');
             if (!grid) return;
 
-            grid.innerHTML = GALLERY_ITEMS.map((item, idx) => `
-                <button
-                    type="button"
-                    data-gallery-index="${idx}"
-                    class="group relative aspect-[4/5] rounded-2xl overflow-hidden border border-champagne/80 bg-white shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold"
-                >
-                    <img
-                        src="${item.src}"
-                        alt="${escapeHTML(item.caption)}"
-                        onerror="this.onerror=null;this.src='${item.fallback}'"
-                        loading="lazy"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            if (!galleryItems || galleryItems.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-xs text-taupe py-10">Belum ada foto di galeri.</p>`;
+                return;
+            }
+
+            grid.innerHTML = galleryItems.map((item, idx) => {
+                const fallbackUrl = item.fallback || `https://placehold.co/800x1000/EAE3D5/6E655B?text=Foto+${idx + 1}`;
+                const srcUrl = normalizeImageUrl(item.src);
+                return `
+                    <button
+                        type="button"
+                        data-gallery-index="${idx}"
+                        class="group relative aspect-[4/5] rounded-2xl overflow-hidden border border-champagne/80 bg-white shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold"
                     >
-                    <div class="absolute inset-0 bg-espresso/0 group-hover:bg-espresso/25 transition-colors flex items-end p-3">
-                        <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] uppercase tracking-[0.2em] text-ivory">
-                            Perbesar
-                        </span>
-                    </div>
-                </button>
-            `).join('');
+                        <img
+                            src="${escapeHTML(srcUrl)}"
+                            alt="${escapeHTML(item.caption || 'Foto Prewedding')}"
+                            onerror="this.onerror=null;this.src='${escapeHTML(fallbackUrl)}'"
+                            loading="lazy"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        >
+                        <div class="absolute inset-0 bg-espresso/0 group-hover:bg-espresso/25 transition-colors flex items-end p-3">
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] uppercase tracking-[0.2em] text-ivory">
+                                Perbesar
+                            </span>
+                        </div>
+                    </button>
+                `;
+            }).join('');
 
             grid.querySelectorAll('[data-gallery-index]').forEach((btn) => {
                 btn.addEventListener('click', () => {
@@ -1386,15 +1572,17 @@
         }
 
         function updateLightboxView() {
-            const item = GALLERY_ITEMS[currentLightboxIndex];
+            if (!galleryItems.length) return;
+            const item = galleryItems[currentLightboxIndex % galleryItems.length];
+            const fallbackUrl = item.fallback || 'https://placehold.co/800x1000/EAE3D5/6E655B?text=Foto';
             const imgEl = document.getElementById('lightbox-img');
             const captionEl = document.getElementById('lightbox-caption');
             const counterEl = document.getElementById('lightbox-counter');
 
-            imgEl.onerror = () => { imgEl.src = item.fallback; };
-            imgEl.src = item.src;
-            captionEl.textContent = item.caption;
-            counterEl.textContent = `${currentLightboxIndex + 1} / ${GALLERY_ITEMS.length}`;
+            imgEl.onerror = () => { imgEl.src = fallbackUrl; };
+            imgEl.src = normalizeImageUrl(item.src);
+            captionEl.textContent = item.caption || '';
+            counterEl.textContent = `${currentLightboxIndex + 1} / ${galleryItems.length}`;
         }
 
         function openLightbox(index) {
@@ -1412,12 +1600,14 @@
         }
 
         function nextLightbox() {
-            currentLightboxIndex = (currentLightboxIndex + 1) % GALLERY_ITEMS.length;
+            if (!galleryItems.length) return;
+            currentLightboxIndex = (currentLightboxIndex + 1) % galleryItems.length;
             updateLightboxView();
         }
 
         function prevLightbox() {
-            currentLightboxIndex = (currentLightboxIndex - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length;
+            if (!galleryItems.length) return;
+            currentLightboxIndex = (currentLightboxIndex - 1 + galleryItems.length) % galleryItems.length;
             updateLightboxView();
         }
 
@@ -1427,6 +1617,10 @@
          * ====================================================================
          */
         function openVideoModal() {
+            if (!galleryItems.length) {
+                showToast('Belum ada foto untuk pratinjau highlight.');
+                return;
+            }
             const modal = document.getElementById('video-modal');
             const imgEl = document.getElementById('video-reel-img');
             const subEl = document.getElementById('video-reel-subtitle');
@@ -1437,11 +1631,12 @@
 
             let slideIdx = 0;
             function showSlide() {
-                const item = GALLERY_ITEMS[slideIdx % GALLERY_ITEMS.length];
-                imgEl.onerror = () => { imgEl.src = item.fallback; };
-                imgEl.src = item.src;
-                subEl.textContent = `"${item.caption}"`;
-                const pct = (((slideIdx % GALLERY_ITEMS.length) + 1) / GALLERY_ITEMS.length) * 100;
+                const item = galleryItems[slideIdx % galleryItems.length];
+                const fallbackUrl = item.fallback || 'https://placehold.co/1200x675/262320/E5DCCB?text=Highlight';
+                imgEl.onerror = () => { imgEl.src = fallbackUrl; };
+                imgEl.src = normalizeImageUrl(item.src);
+                subEl.textContent = `"${item.caption || ''}"`;
+                const pct = (((slideIdx % galleryItems.length) + 1) / galleryItems.length) * 100;
                 progressEl.style.width = `${pct}%`;
                 slideIdx++;
             }
@@ -1460,10 +1655,10 @@
 
         /**
          * ====================================================================
-         * 8. TAB AMPLOP DIGITAL (TRANSFER BANK / QRIS / KADO FISIK)
+         * 8. TAB AMPLOP DIGITAL & TOMBOL SALIN DINAMIS
          * ====================================================================
          */
-        function initGiftTabs() {
+        function initGiftTabsAndCopyButtons() {
             const tabBtns = document.querySelectorAll('.gift-tab-btn');
             const panels = document.querySelectorAll('.gift-panel');
 
@@ -1483,24 +1678,35 @@
                     if (activePanel) activePanel.classList.remove('hidden');
                 });
             });
+
+            // Tombol salin selalu membaca nilai terbaru dari Spreadsheet
+            document.getElementById('btn-copy-venue-address').addEventListener('click', () => {
+                copyTextToClipboard(`${weddingData.venue_name}, ${weddingData.venue_address}`, 'Alamat lokasi acara');
+            });
+
+            document.getElementById('btn-copy-bank1').addEventListener('click', () => {
+                const cleanNumber = String(weddingData.bank1_number || '').replace(/\s+/g, '');
+                copyTextToClipboard(cleanNumber, `Nomor Rekening ${weddingData.bank1_name}`);
+            });
+
+            document.getElementById('btn-copy-bank2').addEventListener('click', () => {
+                const cleanNumber = String(weddingData.bank2_number || '').replace(/\s+/g, '');
+                copyTextToClipboard(cleanNumber, `Nomor Rekening ${weddingData.bank2_name}`);
+            });
+
+            document.getElementById('btn-copy-gift-address').addEventListener('click', () => {
+                const fullGiftAddr = `${weddingData.gift_recipient} - ${weddingData.gift_address} (${weddingData.gift_phone})`;
+                copyTextToClipboard(fullGiftAddr, 'Alamat pengiriman kado');
+            });
         }
 
         /**
          * ====================================================================
-         * 9. RSVP DIGITAL & BUKU TAMU (TERHUBUNG GOOGLE SHEETS VIA FETCH API)
+         * 9. KONEKSI FULL SYNC GOOGLE SHEETS (DATA PENGANTIN, GALERI & RSVP)
          * ====================================================================
          */
-        function escapeHTML(str) {
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
         function isGoogleSheetsConfigured() {
-            const url = (WEDDING_CONFIG.googleScriptUrl || '').trim();
+            const url = (GOOGLE_SCRIPT_URL || '').trim();
             return url.startsWith('https://script.google.com/');
         }
 
@@ -1523,10 +1729,12 @@
         }
 
         /**
-         * Mengambil daftar ucapan & konfirmasi RSVP langsung dari Google Sheets.
-         * Jika `googleScriptUrl` belum diisi, otomatis menggunakan data contoh (Mode Demo).
+         * Memuat seluruh data dari Google Sheets sekaligus:
+         * - Data_Pengantin (nama, tanggal, lokasi, rekening, QRIS, foto utama)
+         * - Galeri_Foto    (daftar foto prewedding)
+         * - RSVP_Ucapan    (daftar kehadiran & ucapan)
          */
-        async function loadWishesFromSheets(showNotify = false) {
+        async function loadAllDataFromSheets(showNotify = false) {
             const listEl = document.getElementById('wishes-list');
 
             if (!isGoogleSheetsConfigured()) {
@@ -1536,18 +1744,18 @@
                 setDbStatusBadge('demo', 'Mode Demo');
                 renderWishesAndStats();
                 if (showNotify) {
-                    showToast('Isi googleScriptUrl untuk sinkronisasi dengan Google Sheets.');
+                    showToast('Isi GOOGLE_SCRIPT_URL agar data sinkron dengan Google Sheets.');
                 }
                 return;
             }
 
             setDbStatusBadge('loading', 'Menyinkronkan...');
             if (wishesData.length === 0 && listEl) {
-                listEl.innerHTML = `<p class="text-center text-xs text-taupe py-10 animate-pulse">Memuat ucapan dari Google Sheets...</p>`;
+                listEl.innerHTML = `<p class="text-center text-xs text-taupe py-10 animate-pulse">Memuat data dari Google Sheets...</p>`;
             }
 
             try {
-                const response = await fetch(WEDDING_CONFIG.googleScriptUrl, {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'GET',
                     redirect: 'follow'
                 });
@@ -1561,12 +1769,35 @@
                     throw new Error(result.message || 'Respons server tidak valid.');
                 }
 
+                // 1. Terapkan data pengantin dari tab Data_Pengantin
+                if (result.wedding && typeof result.wedding === 'object') {
+                    Object.keys(result.wedding).forEach((key) => {
+                        const val = result.wedding[key];
+                        // qris_image_url boleh kosong (untuk kembali ke contoh SVG)
+                        if (key === 'qris_image_url' || (val !== undefined && val !== '')) {
+                            weddingData[key] = val;
+                        }
+                    });
+                    applyWeddingDataToDOM();
+                }
+
+                // 2. Terapkan galeri foto dari tab Galeri_Foto
+                if (Array.isArray(result.gallery) && result.gallery.length > 0) {
+                    galleryItems = result.gallery.map((item, idx) => ({
+                        src: item.src,
+                        caption: item.caption || '',
+                        fallback: `https://placehold.co/800x1000/EAE3D5/6E655B?text=Foto+${idx + 1}`
+                    }));
+                    renderGallery();
+                }
+
+                // 3. Terapkan ucapan & RSVP dari tab RSVP_Ucapan
                 wishesData = Array.isArray(result.wishes) ? result.wishes : [];
                 setDbStatusBadge('connected', 'Google Sheets Aktif');
                 renderWishesAndStats();
 
                 if (showNotify) {
-                    showToast('Data ucapan berhasil diperbarui dari Google Sheets.');
+                    showToast('Semua data undangan & ucapan berhasil diperbarui.');
                 }
             } catch (err) {
                 console.error('Gagal mengambil data Google Sheets:', err);
@@ -1579,12 +1810,8 @@
             }
         }
 
-        /**
-         * Mengirim data RSVP & ucapan baru ke Google Apps Script (POST).
-         * Menggunakan Content-Type text/plain agar terhindar dari blokir CORS preflight.
-         */
         async function submitRsvpToSheets(payload) {
-            const response = await fetch(WEDDING_CONFIG.googleScriptUrl, {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 redirect: 'follow',
                 headers: {
@@ -1679,7 +1906,6 @@
             const guestWrapper = document.getElementById('guest-count-wrapper');
             const radios = document.querySelectorAll('input[name="attendance"]');
 
-            // Sembunyikan pilihan jumlah tamu jika memilih "Tidak Hadir"
             radios.forEach((radio) => {
                 radio.addEventListener('change', (e) => {
                     if (e.target.value === 'Tidak Hadir') {
@@ -1690,7 +1916,6 @@
                 });
             });
 
-            // Filter buku tamu
             const filterBtns = document.querySelectorAll('.wish-filter-btn');
             filterBtns.forEach((btn) => {
                 btn.addEventListener('click', () => {
@@ -1705,12 +1930,10 @@
                 });
             });
 
-            // Tombol muat ulang ucapan
             if (refreshBtn) {
-                refreshBtn.addEventListener('click', () => loadWishesFromSheets(true));
+                refreshBtn.addEventListener('click', () => loadAllDataFromSheets(true));
             }
 
-            // Submit formulir RSVP ke Google Sheets (atau Mode Demo jika URL belum diisi)
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const name = document.getElementById('input-name').value.trim();
@@ -1727,7 +1950,6 @@
 
                 const payload = { name, attendance, guests, wish };
 
-                // Jika belum terhubung Google Sheets, simpan sementara di sesi ini (Mode Demo)
                 if (!isGoogleSheetsConfigured()) {
                     wishesData.unshift({
                         id: `demo_${Date.now()}`,
@@ -1740,7 +1962,6 @@
                     return;
                 }
 
-                // Kirim ke Google Sheets
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Mengirim ke Google Sheets...';
 
@@ -1810,7 +2031,6 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
 
-                // Tampilkan kembali sampul agar pengguna dapat melihat hasil nama tamu
                 const cover = document.getElementById('invitation-cover');
                 cover.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
                 document.body.classList.add('overflow-hidden');
@@ -1824,13 +2044,13 @@
          */
         window.addEventListener('DOMContentLoaded', () => {
             initGuestPersonalization();
-            startCountdown();
-            initCalendarButtons();
+            applyWeddingDataToDOM();
+            initCalendarDownload();
             renderGallery();
-            initGiftTabs();
-            loadWishesFromSheets();
+            initGiftTabsAndCopyButtons();
             initRSVPForm();
             initGuestLinkTool();
+            loadAllDataFromSheets();
 
             // Event Tombol Buka Undangan & Musik
             document.getElementById('btn-open-invitation').addEventListener('click', openInvitation);
