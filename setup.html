@@ -275,7 +275,7 @@ function doGet(e) {
           base64: Utilities.base64Encode(blob.getBytes())
         });
       } catch (driveErr) {
-        const res = UrlFetchApp.fetch('https://drive.google.com/uc?export=download&id=' + fileId, {
+        const res = UrlFetchApp.fetch('https://drive.usercontent.google.com/download?id=' + fileId + '&export=download&confirm=t', {
           followRedirects: true,
           muteHttpExceptions: true
         });
