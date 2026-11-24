@@ -76,6 +76,7 @@ const DEFAULT_WEDDING_ROWS = [
   ['quote_source', 'QS. Ar-Rum : 21', 'Sumber kutipan / ayat'],
   ['hashtag', '#PatrickGiovaniForever • 2026', 'Hashtag di bagian penutup'],
   ['website_url', '', 'Opsional: Link website undangan Anda yang sudah online (untuk fitur Link Tamu)'],
+  ['music_url', 'https://drive.google.com/file/d/1dfyEtypysQfx0yeKMz-4TbxvfoBnqxgF/view?usp=sharing', 'Link lagu latar MP3 (boleh link Google Drive)'],
   ['family_access_code', '261126', 'Kode PIN khusus keluarga untuk membuka fitur Link Tamu'],
   ['cover_bg_photo', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80', 'Link foto latar sampul (boleh link Google Drive)'],
   ['cover_arch_photo', 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80', 'Link foto bingkai lengkung sampul (boleh link Google Drive)'],
@@ -253,11 +254,47 @@ function createJsonResponse_(payload) {
 
 /**
  * ============================================================================
- * ENDPOINT GET: Mengambil Data Pengantin, Galeri Foto & Daftar RSVP/Ucapan
+ * ENDPOINT GET: Mengambil Data Pengantin, Galeri Foto, Daftar RSVP & Audio
  * ============================================================================
  */
 function doGet(e) {
   try {
+    // Endpoint khusus untuk mengalirkan file audio MP3 dari Google Drive tanpa blokir CORS/ORB
+    if (e && e.parameter && e.parameter.action === 'audio' && e.parameter.id) {
+      const fileId = String(e.parameter.id).replace(/[^a-zA-Z0-9_-]/g, '');
+      if (!fileId) {
+        return createJsonResponse_({ status: 'error', message: 'ID file audio tidak valid.' });
+      }
+
+      try {
+        const file = DriveApp.getFileById(fileId);
+        const blob = file.getBlob();
+        return createJsonResponse_({
+          status: 'success',
+          mimeType: blob.getContentType() || 'audio/mpeg',
+          base64: Utilities.base64Encode(blob.getBytes())
+        });
+      } catch (driveErr) {
+        const res = UrlFetchApp.fetch('https://drive.google.com/uc?export=download&id=' + fileId, {
+          followRedirects: true,
+          muteHttpExceptions: true
+        });
+        const blob = res.getBlob();
+        const contentType = String(blob.getContentType() || '');
+        if (contentType.indexOf('text/html') !== -1) {
+          return createJsonResponse_({
+            status: 'error',
+            message: 'Pastikan akses file audio di Google Drive disetel ke Anyone with the link.'
+          });
+        }
+        return createJsonResponse_({
+          status: 'success',
+          mimeType: contentType || 'audio/mpeg',
+          base64: Utilities.base64Encode(blob.getBytes())
+        });
+      }
+    }
+
     const { weddingSheet, gallerySheet, rsvpSheet } = setupDatabase();
     const tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone() || 'Asia/Jayapura';
 
