@@ -632,6 +632,25 @@
     <!-- ===================================================================== -->
     <!-- TOMBOL MUSIK LATAR MELAYANG (FLOATING MUSIC BUTTON)                   -->
     <!-- ===================================================================== -->
+    <div id="gdrive-audio-player-box" class="fixed bottom-36 right-4 sm:bottom-20 sm:right-6 z-40 hidden w-72 sm:w-80 bg-espresso/95 backdrop-blur-md border border-gold/40 rounded-2xl p-3 shadow-2xl text-ivory transition-all duration-300">
+        <div class="flex items-center justify-between mb-2 px-1">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-champagne font-medium">Lagu Latar Pernikahan</span>
+            <button id="btn-close-gdrive-player" type="button" aria-label="Tutup pemutar lagu" class="text-champagne/70 hover:text-ivory text-xs px-1.5 cursor-pointer">&times;</button>
+        </div>
+        <div class="w-full h-14 rounded-xl overflow-hidden bg-black/40 border border-champagne/20">
+            <iframe
+                id="gdrive-audio-iframe"
+                title="Pemutar Lagu Google Drive"
+                src="about:blank"
+                allow="autoplay; encrypted-media"
+                class="w-full h-full border-0"
+            ></iframe>
+        </div>
+        <p class="mt-1.5 px-1 text-[10px] text-champagne/75 leading-snug">
+            Ketuk tombol <strong>Play (&#9654;)</strong> pada pemutar di atas jika lagu belum mulai otomatis.
+        </p>
+    </div>
+
     <button
         id="btn-music-toggle"
         type="button"
@@ -858,7 +877,7 @@
             quote_source: 'Pengkhotbah 3 : 11',
             hashtag: '#PatrickGiovaniForever • 2026',
             website_url: '',
-            music_url: 'https://drive.google.com/file/d/1dfyEtypysQfx0yeKMz-4TbxvfoBnqxgF/view?usp=drive_link', // Tempel link MP3 kustom di sini atau lewat Google Sheets (baris music_url)
+            music_url: 'https://drive.google.com/file/d/1dfyEtypysQfx0yeKMz-4TbxvfoBnqxgF/view?usp=sharing', // Link MP3 latar dari Google Drive
             cover_bg_photo: 'https://drive.google.com/file/d/1Fzl15Ewg9viCKo0PA1SXk9C2R2FrR03C/view?usp=drive_link',
             cover_arch_photo: 'https://drive.google.com/file/d/1u0oyM8FsUS1RrJvOFnNedo5Dz0oET_I_/view?usp=drive_link',
             hero_photo: 'https://drive.google.com/file/d/1ogZbp1tSb2K598quO47xor32vOcIECNu/view?usp=drive_link',
@@ -905,7 +924,9 @@
         let countdownTimer = null;
         let toastTimeout = null;
         let isMusicPlaying = false;
-        let activeAudioMode = 'none'; // 'mp3' | 'tone' | 'none'
+        let activeAudioMode = 'none'; // 'mp3' | 'gdrive-embed' | 'tone' | 'none'
+        let gdriveBlobUrl = '';
+        let gdrivePreloadPromise = null;
         let musicLoop = null;
         let musicSynth = null;
 
@@ -956,21 +977,48 @@
             return url;
         }
 
-        function normalizeAudioUrl(rawUrl) {
+        function extractGoogleDriveFileId(rawUrl) {
             const url = String(rawUrl || '').trim();
             if (!url) return '';
 
             let match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
-            if (match && match[1]) {
-                return `https://docs.google.com/uc?export=download&id=${match[1]}`;
-            }
+            if (match && match[1]) return match[1];
 
-            match = url.match(/drive\.google\.com\/(?:open|uc)\?[^#]*\bid=([a-zA-Z0-9_-]+)/i);
-            if (match && match[1]) {
-                return `https://docs.google.com/uc?export=download&id=${match[1]}`;
-            }
+            match = url.match(/(?:drive|docs)\.google\.com\/(?:open|uc)\?[^#]*\bid=([a-zA-Z0-9_-]+)/i);
+            if (match && match[1]) return match[1];
 
-            return url;
+            return '';
+        }
+
+        function preloadGoogleDriveAudio(rawUrl) {
+            const fileId = extractGoogleDriveFileId(rawUrl);
+            if (!fileId || !isGoogleSheetsConfigured()) return Promise.resolve('');
+            if (gdriveBlobUrl) return Promise.resolve(gdriveBlobUrl);
+            if (gdrivePreloadPromise) return gdrivePreloadPromise;
+
+            const endpoint = `${GOOGLE_SCRIPT_URL}?action=audio&id=${encodeURIComponent(fileId)}`;
+            gdrivePreloadPromise = fetch(endpoint, { method: 'GET', redirect: 'follow' })
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => {
+                    if (data && data.status === 'success' && data.base64) {
+                        const mimeType = data.mimeType || 'audio/mpeg';
+                        const byteChars = atob(data.base64);
+                        const byteNumbers = new Array(byteChars.length);
+                        for (let i = 0; i < byteChars.length; i++) {
+                            byteNumbers[i] = byteChars.charCodeAt(i);
+                        }
+                        const blob = new Blob([new Uint8Array(byteNumbers)], { type: mimeType });
+                        gdriveBlobUrl = URL.createObjectURL(blob);
+                        return gdriveBlobUrl;
+                    }
+                    return '';
+                })
+                .catch((err) => {
+                    console.warn('Preload audio Google Drive via Apps Script dilewati:', err);
+                    return '';
+                });
+
+            return gdrivePreloadPromise;
         }
 
         /**
@@ -1126,10 +1174,20 @@
 
             // Sinkronisasi sumber lagu latar MP3 jika diisi
             const audioEl = document.getElementById('bg-music-audio');
-            const normalizedAudio = normalizeAudioUrl(weddingData.music_url);
-            if (audioEl && normalizedAudio && audioEl.getAttribute('data-loaded-src') !== normalizedAudio) {
-                audioEl.src = normalizedAudio;
-                audioEl.setAttribute('data-loaded-src', normalizedAudio);
+            const rawMusicUrl = String(weddingData.music_url || '').trim();
+            if (rawMusicUrl && (!audioEl || audioEl.getAttribute('data-raw-music-url') !== rawMusicUrl)) {
+                if (audioEl) audioEl.setAttribute('data-raw-music-url', rawMusicUrl);
+                gdriveBlobUrl = '';
+                gdrivePreloadPromise = null;
+
+                const driveFileId = extractGoogleDriveFileId(rawMusicUrl);
+                if (driveFileId) {
+                    preloadGoogleDriveAudio(rawMusicUrl);
+                } else if (audioEl) {
+                    audioEl.src = rawMusicUrl;
+                    audioEl.setAttribute('data-loaded-src', rawMusicUrl);
+                }
+
                 if (isMusicPlaying && activeAudioMode === 'tone') {
                     stopToneMusic();
                     startBackgroundMusic();
@@ -1196,7 +1254,7 @@
 
         /**
          * ====================================================================
-         * 3. PEMBUKAAN SAMPUL UNDANGAN & MUSIK LATAR (MP3 KUSTOM / TONE.JS)
+         * 3. KONTROL MUSIK LATAR (GOOGLE DRIVE / MP3 + CADANGAN PIANO)
          * ====================================================================
          */
         function updateMusicIcon(playing) {
@@ -1213,65 +1271,131 @@
             }
         }
 
-        async function startToneMusic() {
-            if (typeof Tone === 'undefined') return;
+        function stopToneMusic() {
             try {
-                await Tone.start();
-
-                if (!musicSynth) {
-                    const reverb = new Tone.Reverb({ decay: 4.5, wet: 0.45 }).toDestination();
-                    musicSynth = new Tone.PolySynth(Tone.Synth, {
-                        oscillator: { type: 'sine' },
-                        envelope: { attack: 0.6, decay: 1.2, sustain: 0.4, release: 2.2 }
-                    }).connect(reverb);
-                    musicSynth.volume.value = -16;
-
-                    const chords = [
-                        ['C4', 'E4', 'G4', 'B4'],
-                        ['A3', 'E4', 'A4', 'C5'],
-                        ['F3', 'C4', 'F4', 'A4'],
-                        ['G3', 'D4', 'G4', 'B4']
-                    ];
-                    let chordIndex = 0;
-
-                    musicLoop = new Tone.Loop((time) => {
-                        const chord = chords[chordIndex % chords.length];
-                        musicSynth.triggerAttackRelease(chord, '2n', time);
-                        chordIndex++;
-                    }, '2.4s');
+                if (typeof Tone !== 'undefined' && Tone.Transport) {
+                    Tone.Transport.stop();
                 }
+                if (musicLoop) {
+                    musicLoop.stop();
+                    musicLoop.dispose();
+                    musicLoop = null;
+                }
+                if (musicSynth) {
+                    musicSynth.dispose();
+                    musicSynth = null;
+                }
+            } catch (err) {
+                console.warn('Gagal menghentikan Tone.js:', err);
+            }
+        }
 
-                Tone.Transport.start();
+        async function startToneMusic() {
+            try {
+                if (typeof Tone === 'undefined') return;
+                await Tone.start();
+                stopToneMusic();
+
+                const reverb = new Tone.Reverb({ decay: 4.5, wet: 0.45 }).toDestination();
+                musicSynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.4, decay: 0.8, sustain: 0.4, release: 2.5 }
+                }).connect(reverb);
+                musicSynth.volume.value = -14;
+
+                const chords = [
+                    ['C4', 'E4', 'G4', 'B4'],
+                    ['A3', 'C4', 'E4', 'G4'],
+                    ['F3', 'A3', 'C4', 'E4'],
+                    ['G3', 'B3', 'D4', 'F4']
+                ];
+                let step = 0;
+
+                musicLoop = new Tone.Loop((time) => {
+                    const chord = chords[step % chords.length];
+                    musicSynth.triggerAttackRelease(chord, '2n', time);
+                    step += 1;
+                }, '1m');
+
                 musicLoop.start(0);
+                Tone.Transport.start();
                 activeAudioMode = 'tone';
                 isMusicPlaying = true;
                 updateMusicIcon(true);
             } catch (err) {
-                console.warn('Audio latar tidak dapat dimulai otomatis:', err);
+                console.warn('Audio Tone.js menunggu interaksi pengguna:', err);
             }
         }
 
-        function stopToneMusic() {
-            if (typeof Tone === 'undefined') return;
-            try {
-                if (musicLoop) musicLoop.stop();
-                Tone.Transport.pause();
-            } catch (err) {
-                console.warn('Gagal menjeda audio Tone.js:', err);
+        function showGoogleDriveMiniPlayer(fileId) {
+            const box = document.getElementById('gdrive-audio-player-box');
+            const iframe = document.getElementById('gdrive-audio-iframe');
+            if (!box || !iframe || !fileId) return;
+
+            const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+            if (iframe.getAttribute('data-loaded-preview') !== previewUrl) {
+                iframe.src = previewUrl;
+                iframe.setAttribute('data-loaded-preview', previewUrl);
             }
+            box.classList.remove('hidden');
+            activeAudioMode = 'gdrive-embed';
+            isMusicPlaying = true;
+            updateMusicIcon(true);
+        }
+
+        function hideGoogleDriveMiniPlayer() {
+            const box = document.getElementById('gdrive-audio-player-box');
+            if (box) box.classList.add('hidden');
         }
 
         async function startBackgroundMusic() {
             const audioEl = document.getElementById('bg-music-audio');
-            const customSrc = normalizeAudioUrl(weddingData.music_url);
+            const rawMusicUrl = String(weddingData.music_url || '').trim();
 
-            if (audioEl && customSrc) {
-                try {
-                    if (audioEl.getAttribute('data-loaded-src') !== customSrc) {
-                        audioEl.src = customSrc;
-                        audioEl.setAttribute('data-loaded-src', customSrc);
+            if (!rawMusicUrl) {
+                await startToneMusic();
+                return;
+            }
+
+            const driveFileId = extractGoogleDriveFileId(rawMusicUrl);
+
+            // Kasus 1: Link lagu berasal dari Google Drive
+            if (driveFileId) {
+                stopToneMusic();
+                const blobUrl = await preloadGoogleDriveAudio(rawMusicUrl);
+                if (audioEl && blobUrl) {
+                    try {
+                        audioEl.volume = 0.7;
+                        if (audioEl.getAttribute('data-loaded-src') !== blobUrl) {
+                            audioEl.src = blobUrl;
+                            audioEl.setAttribute('data-loaded-src', blobUrl);
+                            audioEl.load();
+                        }
+                        await audioEl.play();
+                        hideGoogleDriveMiniPlayer();
+                        activeAudioMode = 'mp3';
+                        isMusicPlaying = true;
+                        updateMusicIcon(true);
+                        return;
+                    } catch (err) {
+                        console.warn('Pemutaran audio blob gagal, membuka mini player Google Drive:', err);
                     }
-                    audioEl.volume = 0.65;
+                }
+
+                // Tampilkan pemutar resmi Google Drive agar lagu asli user tetap bisa diputar
+                showGoogleDriveMiniPlayer(driveFileId);
+                return;
+            }
+
+            // Kasus 2: Link langsung file MP3 (non-Google Drive)
+            if (audioEl) {
+                try {
+                    audioEl.volume = 0.7;
+                    if (audioEl.getAttribute('data-loaded-src') !== rawMusicUrl) {
+                        audioEl.src = rawMusicUrl;
+                        audioEl.setAttribute('data-loaded-src', rawMusicUrl);
+                        audioEl.load();
+                    }
                     await audioEl.play();
                     stopToneMusic();
                     activeAudioMode = 'mp3';
@@ -1279,7 +1403,7 @@
                     updateMusicIcon(true);
                     return;
                 } catch (err) {
-                    console.warn('Gagal memutar MP3 kustom, beralih ke piano bawaan:', err);
+                    console.warn('Gagal memutar link MP3 langsung:', err);
                 }
             }
 
@@ -1291,12 +1415,32 @@
             if (audioEl && !audioEl.paused) {
                 audioEl.pause();
             }
+            if (activeAudioMode === 'gdrive-embed') {
+                const iframe = document.getElementById('gdrive-audio-iframe');
+                if (iframe) {
+                    iframe.src = 'about:blank';
+                    iframe.removeAttribute('data-loaded-preview');
+                }
+                hideGoogleDriveMiniPlayer();
+            }
             stopToneMusic();
             isMusicPlaying = false;
             updateMusicIcon(false);
         }
 
         function toggleMusic() {
+            if (activeAudioMode === 'gdrive-embed') {
+                const box = document.getElementById('gdrive-audio-player-box');
+                if (box && box.classList.contains('hidden')) {
+                    const driveFileId = extractGoogleDriveFileId(weddingData.music_url);
+                    showGoogleDriveMiniPlayer(driveFileId);
+                } else {
+                    stopBackgroundMusic();
+                    showToast('Pemutar lagu ditutup.');
+                }
+                return;
+            }
+
             if (isMusicPlaying) {
                 stopBackgroundMusic();
                 showToast('Musik latar dijeda.');
@@ -1727,7 +1871,7 @@
                 if (result.wedding && typeof result.wedding === 'object') {
                     Object.keys(result.wedding).forEach((key) => {
                         const val = result.wedding[key];
-                        if (key === 'website_url' || key === 'music_url' || (val !== undefined && val !== '')) {
+                        if (val !== undefined && String(val).trim() !== '') {
                             weddingData[key] = val;
                         }
                     });
@@ -2266,6 +2410,11 @@
                 const musicBtn = document.getElementById('btn-music-toggle');
                 if (musicBtn) {
                     musicBtn.addEventListener('click', toggleMusic);
+                }
+
+                const closeGdrivePlayerBtn = document.getElementById('btn-close-gdrive-player');
+                if (closeGdrivePlayerBtn) {
+                    closeGdrivePlayerBtn.addEventListener('click', hideGoogleDriveMiniPlayer);
                 }
 
                 loadAllDataFromSheets(false);
